@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "installCommand": "cd michal-dev && npm install",
+  "buildCommand": "cd michal-dev && npm run build",
+  "outputDirectory": "michal-dev/.next"
+}
