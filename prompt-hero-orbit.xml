@@ -1,0 +1,243 @@
+<task>
+  <role>
+    Jesteś UI/UX Pro Max — ekspertem od tworzenia pixel-perfect, animowanych komponentów React
+    w ekosystemie Next.js 14 (App Router) + Tailwind CSS + GSAP. Generujesz kod produkcyjny,
+    TypeScript strict, zero błędów, zero kompromisów wizualnych.
+  </role>
+
+  <objective>
+    Stwórz komponent `TechOrbit.tsx` — animowany system orbitalny z ikonami technologii,
+    który zastąpi obecną lewą kolumnę (foto + floating elements) w HeroSection.
+    Inspiracja wizualna: planetarny układ ze strony Marketeam (koncentryczne okręgi
+    z elementami krążącymi po orbitach wokół centralnego statystycznego elementu).
+    Zamiast awatarów ludzi — ikony technologii z react-icons.
+  </objective>
+
+  <context>
+    <project-stack>
+      Next.js 14 (App Router), TypeScript strict, Tailwind CSS v3.4+, GSAP (zainstalowany),
+      react-icons (zainstalowany), DM Sans / DM Mono / Syne (fonty w projekcie).
+    </project-stack>
+
+    <design-tokens>
+      | Token             | CSS Variable        | Value          | Tailwind          |
+      |-------------------|---------------------|----------------|-------------------|
+      | Background        | --bg                | #0a0a0f        | bg-bg             |
+      | Surface           | --surface           | #111118        | bg-surface        |
+      | Surface 2         | --surface2          | #18181f        | bg-surface2       |
+      | Border            | --border-custom     | #2a2a38        | border-border     |
+      | Accent Purple     | --accent1           | #7c6bff        | accent1           |
+      | Accent Teal       | --accent2           | #00d4aa        | accent2           |
+      | Accent Red        | --accent3           | #ff6b6b        | accent3           |
+      | Text              | --text-custom       | #e8e8f0        | text-text         |
+      | Muted             | --muted-custom      | #7070a0        | text-muted        |
+
+      Fonty Tailwind: font-display (Syne), font-sans (DM Sans), font-mono (DM Mono), font-jakarta (Plus Jakarta Sans)
+    </design-tokens>
+
+    <tech-icons-to-use>
+      Orbita zewnętrzna (orbit-3, największa, r ≈ 48%):
+        - React        → SiReact          (kolor: #61DAFB)
+        - TypeScript   → SiTypescript     (kolor: #3178C6)
+        - Next.js      → SiNextdotjs      (kolor: #ffffff)
+        - Docker       → SiDocker         (kolor: #2496ED)
+        - GraphQL      → SiGraphql        (kolor: #E10098)
+
+      Orbita środkowa (orbit-2, r ≈ 33%):
+        - C#           → TbBrandCSharp    (kolor: #512BD4)
+        - Tailwind     → SiTailwindcss    (kolor: #06B6D4)
+        - Azure        → SiMicrosoftazure (kolor: #0078D4)
+        - Git          → FaGitAlt         (kolor: #F05032)
+
+      Orbita wewnętrzna (orbit-1, najmniejsza, r ≈ 20%):
+        - JavaScript   → SiJavascript     (kolor: #F7DF1E)
+        - .NET         → SiDotnet         (kolor: #512BD4)
+        - Figma        → SiFigma          (kolor: #F24E1E)
+
+      Import path:
+        import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiDocker, SiGraphql, SiJavascript, SiDotnet, SiFigma, SiMicrosoftazure } from 'react-icons/si';
+        import { FaGitAlt } from 'react-icons/fa';
+        import { TbBrandCSharp } from 'react-icons/tb';
+    </tech-icons-to-use>
+
+    <current-hero-file>
+      Plik: components/sections/HeroSection.tsx
+      Lokalizacja lewej kolumny do zastąpienia: linie 221-249 (div z className "relative w-full max-w-[800px]...")
+      Komponent TechOrbit.tsx będzie importowany i wstawiony w miejsce obecnego bloku graficznego.
+    </current-hero-file>
+  </context>
+
+  <component-spec name="TechOrbit">
+    <file-path>components/ui/TechOrbit.tsx</file-path>
+    <directive>'use client';</directive>
+    <typescript>strict — zero any, pełne typowanie propsów i stanu</typescript>
+
+    <visual-structure>
+      <!--
+        Cały komponent to kwadratowy kontener (aspect-square) z trzema koncentrycznymi
+        okręgami (orbitami) i centralnym elementem statystycznym.
+
+        ┌──────────────────────────────────────────┐
+        │           ╭── orbit-3 (outer) ──╮        │
+        │        ╭──│── orbit-2 (mid) ──│──╮       │
+        │     ╭──│──│── orbit-1 (inn) ──│──│──╮    │
+        │     │  │  │    ┌────────┐     │  │  │    │
+        │     │  │  │    │ CENTER │     │  │  │    │
+        │     │  │  │    │  STAT  │     │  │  │    │
+        │     │  │  │    └────────┘     │  │  │    │
+        │     ╰──│──│───────────────────│──│──╯    │
+        │        ╰──│───────────────────│──╯       │
+        │           ╰──────────────────╯           │
+        └──────────────────────────────────────────┘
+      -->
+
+      <center-element>
+        Centralny element to PLACEHOLDER NA GRAFIKĘ — nie statystyka, nie tekst.
+
+        Kontener glassmorphic (w-36 h-36 md:w-44 md:h-44 lg:w-56 lg:h-56):
+          - bg: rgba(17,17,24,0.6) z backdrop-blur-xl
+          - border: 1px solid rgba(124,107,255,0.2)
+          - rounded-2xl (nie circle — lekko zaokrąglony kwadrat, bardziej nowoczesny)
+          - overflow-hidden
+          - Subtelny pulsujący glow ring: box-shadow 0 0 60px rgba(124,107,255,0.12)
+
+        Wewnątrz — Next.js Image component z placeholderem:
+          - Import: import Image from 'next/image';
+          - Ścieżka obrazka: src="/img/orbit-center.png"
+            (plik jeszcze nie istnieje — zostanie dodany osobno)
+          - Props: fill, className="object-contain p-3", sizes="(max-width:768px) 144px, (max-width:1024px) 176px, 224px"
+          - alt="Mike — Fullstack Developer"
+
+        Fallback (dopóki grafika nie istnieje):
+          - Pokaż placeholder div z:
+            - Ikoną kodu: np. &lt;TbCode /&gt; z react-icons/tb, 48px, text-accent1/40
+            - Tekst pod ikoną: "HERO ART" w font-mono text-[9px] text-muted/50 tracking-[0.3em]
+          - Realizacja: użyj state z onError na Image aby przełączać między img a fallback,
+            LUB po prostu renderuj oba — Image z z-10, placeholder div pod spodem z z-0
+            (gdy Image się załaduje, zasłoni placeholder)
+
+        UWAGA: Kontener NIE rotuje się z orbitami — jest statyczny, wycentrowany, z-20.
+      </center-element>
+
+      <orbit-rings>
+        Trzy koncentryczne okręgi (CSS border):
+          - orbit-1: 40% rozmiaru kontenera, border: 1px solid rgba(255,255,255,0.04)
+          - orbit-2: 66% rozmiaru kontenera, border: 1px solid rgba(255,255,255,0.06)
+          - orbit-3: 96% rozmiaru kontenera, border: 1px solid rgba(255,255,255,0.08)
+        Każdy okrąg: position absolute, centered, rounded-full.
+        Subtelny gradient arc highlight na orbit-3 (opcjonalny — conic-gradient z accent1/10).
+      </orbit-rings>
+
+      <icon-nodes>
+        Każda ikona technologii to "node" na orbicie:
+          - Kontener: w-11 h-11 lg:w-14 lg:h-14 rounded-full
+          - Tło: bg-surface/80 backdrop-blur-md border border-white/10
+          - Ikona react-icons: 20px (lg:24px), kolor per tech (patrz tech-icons-to-use)
+          - Hover: scale(1.15), border-color zmienia się na kolor ikony, box-shadow glow
+          - Position: absolute, umieszczona na okręgu orbity za pomocą CSS transform
+            → translate(-50%, -50%) + pozycja wyliczona z kąta (startAngle per icon)
+
+        Ikony NIE rotują się wokół własnej osi — zawsze stoją prosto (counter-rotate).
+        Tooltip z nazwą technologii on hover (opcjonalny — prosty div z opacity transition).
+      </icon-nodes>
+    </visual-structure>
+
+    <animation-spec>
+      Silnik: GSAP (import gsap from 'gsap')
+      useLayoutEffect z gsap.context() — cleanup przez ctx.revert()
+
+      <entrance-animation>
+        Timeline (delay: 0.5s — po headline animation w HeroSection):
+        1. Orbit rings: stagger fade in (opacity 0→1) + scale(0.8→1), duration 0.6s, ease power3.out
+        2. Center image placeholder: scale(0.85→1) + opacity(0→1), ease power3.out, duration 0.8s
+           (delikatniejsze niż back.out — grafika nie powinna "odbijać")
+        3. Icon nodes: stagger z orbit-1 → orbit-3,
+           each: opacity 0→1, scale(0→1), ease back.out(1.4), stagger 0.06s
+      </entrance-animation>
+
+      <continuous-orbit-animation>
+        Każda orbita obraca się CIĄGLE (infinite) z różną prędkością i kierunkiem:
+          - orbit-1: rotation 360° w 25s, kierunek: clockwise (ease: none, repeat: -1)
+          - orbit-2: rotation 360° w 35s, kierunek: counter-clockwise
+          - orbit-3: rotation 360° w 50s, kierunek: clockwise
+
+        WAŻNE: Ikony muszą mieć COUNTER-ROTATION aby nie obracały się
+        razem z orbitą — tekst/ikona zawsze stoi prosto.
+        Realizacja: każdy icon-node ma gsap.to z ODWROTNĄ rotacją (np. -360° w tym samym czasie).
+      </continuous-orbit-animation>
+
+      <subtle-effects>
+        - Center glow pulse (na kontenerze, nie na obrazku): box-shadow opacity 0.1 → 0.25, repeat -1, yoyo, duration 3s
+        - Floating micro-motion na ikonach: y ±3px, duration 2-3s, yoyo, repeat -1, random delay per icon
+      </subtle-effects>
+    </animation-spec>
+
+    <responsive-behavior>
+      Mobile (default):
+        - Kontener: w-full aspect-square max-w-[360px] mx-auto
+        - Ikony: w-10 h-10, icon size 16px
+        - Center placeholder: w-32 h-32, icon fallback 36px
+        - Orbity: te same proporcje (40%, 66%, 96%)
+        - Animacja orbit: TAK, ale wolniejsza (×1.5 duration)
+
+      Tablet (md:):
+        - max-w-[500px]
+
+      Desktop (lg:):
+        - max-w-[800px], 2xl:max-w-[950px]
+        - Pełne rozmiary ikon i center
+    </responsive-behavior>
+
+    <background-effects>
+      Za orbitami (z-0):
+        - Radialny gradient blur: bg-gradient-to-tr from-accent1/30 to-emerald-500/20
+        - blur-[120px], rounded-full, inset z paddingiem ~10%
+        - Opcjonalny drugi mniejszy blob z accent2/15 po drugiej stronie
+    </background-effects>
+
+    <accessibility>
+      - Cały komponent owinięty w div z aria-hidden="true" (dekoracyjny)
+      - Ikony nie mają focusable elementów
+      - prefers-reduced-motion: zatrzymaj orbit rotation, zostaw tylko static layout
+    </accessibility>
+  </component-spec>
+
+  <integration-into-hero>
+    Po stworzeniu TechOrbit.tsx, zmodyfikuj HeroSection.tsx:
+
+    1. Dodaj import: import TechOrbit from '../ui/TechOrbit';
+    2. Zastąp CAŁY blok lewej kolumny (div z className "relative w-full max-w-[800px]...")
+       — czyli usuń: photo frame, floating elements, blurred gradient background
+    3. Wstaw w to miejsce:
+       ```tsx
+       <div className="relative w-full max-w-[800px] 2xl:max-w-[950px] mx-auto aspect-square flex items-center justify-center order-2 lg:order-1">
+         <TechOrbit />
+       </div>
+       ```
+    4. Usuń nieużywane importy: Image, HeroImg, imageFrameRef, floatingEl1Ref, floatingEl2Ref
+    5. Usuń z GSAP timeline animacje dotyczące imageFrameRef i floating elements
+    6. Zachowaj resztę HeroSection BEZ ZMIAN (headline, bio, CTA, ticker, badge)
+  </integration-into-hero>
+
+  <quality-checklist>
+    - [ ] TypeScript strict: zero `any`, zero `@ts-ignore`
+    - [ ] Brak hydration mismatch (initial render = server render, animacje w useLayoutEffect)
+    - [ ] GSAP cleanup w return () => ctx.revert()
+    - [ ] prefers-reduced-motion obsługiwane
+    - [ ] Ikony nie rotują się (counter-rotate działa poprawnie)
+    - [ ] Center element czytelny na każdym breakpoincie
+    - [ ] Center Image: graceful fallback gdy /img/orbit-center.png nie istnieje (placeholder icon widoczny)
+    - [ ] Gradient blur nie wychodzi poza kontener (overflow-hidden na rodzicu)
+    - [ ] Import path react-icons: 'react-icons/si', 'react-icons/fa', 'react-icons/tb'
+    - [ ] Brak Material UI, brak ciężkich bibliotek — only Tailwind + GSAP
+    - [ ] Performance: max 60fps, bez layout thrashing, will-change na animowanych elementach
+  </quality-checklist>
+
+  <output-format>
+    Zwróć DWIE rzeczy:
+    1. Pełny plik `components/ui/TechOrbit.tsx`
+    2. Zaktualizowany plik `components/sections/HeroSection.tsx` z integracją TechOrbit
+
+    Żadnych skrótów, żadnych "// ...rest of code" — pełne pliki, gotowe do wklejenia.
+  </output-format>
+</task>

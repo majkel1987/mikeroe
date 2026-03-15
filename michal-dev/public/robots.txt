@@ -1,0 +1,6 @@
+# robots.txt for mikeroe.pl
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mikeroe.pl/sitemap.xml

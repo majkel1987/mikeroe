@@ -1,0 +1,46 @@
+[
+  {
+    "id": "1",
+    "name": "Neon Burger",
+    "role": "Fullstack Developer",
+    "description": "Strona restauracji serwującej burgery rzemieślnicze. Odważna kolorystyka i dynamiczny układ podkreślają uliczny charakter marki.",
+    "stack": ["Next.js", "TypeScript", "Tailwind", "Supabase"],
+    "status": "live",
+    "github": "#",
+    "live": "https://neon-burger.vercel.app/",
+    "image": "/img/neon-burger.png"
+  },
+  {
+    "id": "2",
+    "name": "LexPro",
+    "role": "Frontend Developer",
+    "description": "Witryna kancelarii prawnej z eleganckim, klasycznym designem. Buduje zaufanie i profesjonalny wizerunek firmy.",
+    "stack": ["React", "TypeScript", "Tailwind", "Framer Motion"],
+    "status": "live",
+    "github": "#",
+    "live": "https://lexpro-one.vercel.app/",
+    "image": "/img/lexpro.png"
+  },
+  {
+    "id": "3",
+    "name": "Ecoclean",
+    "role": "Fullstack Developer",
+    "description": "Landing page firmy sprzątającej z naciskiem na ekologię. Przejrzysty layout i sekcja opinii wspierają konwersję.",
+    "stack": ["Next.js", "Tailwind", "Node.js"],
+    "status": "live",
+    "github": "#",
+    "live": "https://eco-clean-hkpw9eepg-majkel1987s-projects.vercel.app/",
+    "image": "/img/ecoclean.png"
+  },
+  {
+    "id": "4",
+    "name": "Physioflow",
+    "role": "Frontend Developer",
+    "description": "Wizytówka gabinetu fizjoterapii. Projekt jest obecnie w fazie developmentu (in progress) i nie został jeszcze opublikowany.",
+    "stack": ["React", "Tailwind", "Next.js"],
+    "status": "in_progress",
+    "github": "#",
+    "live": "#",
+    "image": "/img/Physioflow.png"
+  }
+]

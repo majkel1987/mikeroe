@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pencil + Antigravity Workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #2a2a38;
+    --accent1: #7c6bff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 64px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124,107,255,0.12);
+    border: 1px solid rgba(124,107,255,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent1);
+    margin-bottom: 32px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge::before { content: '◈'; }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+  }
+
+  h1 .line1 { display: block; color: var(--text); }
+  h1 .line2 { display: block; color: var(--accent1); }
+  h1 .line3 { display: block; color: var(--accent2); font-size: 0.6em; font-weight: 600; letter-spacing: 0; }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 560px;
+    margin-top: 16px;
+  }
+
+  /* Tool pills */
+  .tools-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+
+  .tool-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .tool-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 64px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  p { color: #b0b0cc; margin-bottom: 12px; }
+
+  /* Phase timeline */
+  .phases {
+    display: grid;
+    gap: 2px;
+  }
+
+  .phase {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 0;
+  }
+
+  .phase-num-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  .phase-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    flex-shrink: 0;
+    border: 2px solid;
+    z-index: 1;
+  }
+
+  .phase-line {
+    width: 2px;
+    flex: 1;
+    margin-top: 8px;
+    min-height: 24px;
+  }
+
+  .phase:last-child .phase-line { display: none; }
+
+  .phase-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 8px 0 8px 16px;
+    transition: border-color 0.2s;
+  }
+
+  .phase-content:hover { border-color: rgba(124,107,255,0.4); }
+
+  .phase-title {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .phase-tool {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 400;
+  }
+
+  .phase-desc { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .phase-steps {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: #9090b8;
+  }
+
+  .step-icon { flex-shrink: 0; margin-top: 1px; font-size: 13px; }
+
+  /* Code block */
+  .code-block {
+    background: #0d0d14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  .code-block .comment { color: #4a4a6a; }
+  .code-block .cmd { color: var(--accent2); }
+  .code-block .kw { color: var(--accent1); }
+  .code-block .str { color: #ff9e64; }
+
+  /* Tip box */
+  .tip {
+    background: rgba(0, 212, 170, 0.06);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #90c0b8;
+    margin: 16px 0;
+  }
+
+  .tip strong { color: var(--accent2); }
+
+  .warn {
+    background: rgba(255, 107, 107, 0.06);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    border-left: 3px solid var(--accent3);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #c09090;
+    margin: 16px 0;
+  }
+
+  .warn strong { color: var(--accent3); }
+
+  /* Feature grid */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .feature-card .icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .feature-card h3 {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .feature-card p {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* Landing page structure */
+  .lp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .lp-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+
+  .lp-section h3 {
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lp-section ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .lp-section ul li {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lp-section ul li::before { content: '›'; color: var(--accent1); }
+
+  /* Pricing */
+  .pricing-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .price-card.highlight {
+    border-color: rgba(124,107,255,0.5);
+    background: rgba(124,107,255,0.06);
+  }
+
+  .price-card .type { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .price-card .price { font-family: var(--display); font-size: 28px; font-weight: 800; color: var(--accent1); }
+  .price-card .price span { font-size: 14px; color: var(--muted); font-weight: 400; }
+  .price-card .desc { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+  /* Orbito section */
+  .orbito-box {
+    background: linear-gradient(135deg, rgba(124,107,255,0.08), rgba(0,212,170,0.05));
+    border: 1px solid rgba(124,107,255,0.25);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 20px;
+  }
+
+  .orbito-box h3 { font-size: 20px; margin-bottom: 8px; color: var(--accent1); }
+
+  .cost-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .cost-row:last-child { border-bottom: none; }
+  .cost-row .label { color: var(--muted); }
+  .cost-row .val { font-family: var(--mono); }
+  .cost-row .val.green { color: var(--accent2); }
+  .cost-row .val.red { color: var(--accent3); }
+
+  /* Footer */
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+    gap: 12px;
+  }
+
+  .footer-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 600px) {
+    .lp-grid, .pricing-row { grid-template-columns: 1fr; }
+    .container { padding: 40px 20px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">Workflow Guide v1.0</div>
+    <h1>
+      <span class="line1">Pencil + Antigravity</span>
+      <span class="line2">Freelance Dev Stack</span>
+      <span class="line3">Design → Code → Deploy → Zarabiaj</span>
+    </h1>
+    <p class="subtitle">
+      Kompletny workflow do budowania stron internetowych po godzinach — od wizualnego projektu w Pencil, przez generowanie kodu w Antigravity, aż po wdrożenie na produkcję.
+    </p>
+    <div class="tools-row">
+      <div class="tool-pill"><div class="dot" style="background:#7c6bff"></div>Pencil.dev — Visual IDE Canvas</div>
+      <div class="tool-pill"><div class="dot" style="background:#00d4aa"></div>Google Antigravity — Agentic IDE</div>
+      <div class="tool-pill"><div class="dot" style="background:#ff6b6b"></div>Claude Code — AI Backend</div>
+      <div class="tool-pill"><div class="dot" style="background:#ffd666"></div>Vercel — Deploy</div>
+    </div>
+  </div>
+
+  <!-- DLACZEGO TEN STACK -->
+  <div class="section">
+    <div class="section-label">01 — Stack Overview</div>
+    <h2>Dlaczego właśnie ten stack?</h2>
+    <p>Pencil i Antigravity uzupełniają się idealnie: Pencil zajmuje się <strong style="color:var(--text)">warstwą wizualną</strong>, Antigravity <strong style="color:var(--text)">warstwą agentową i deploymentem</strong>. Razem eliminują oba główne wąskie gardła freelancerskiego workflow — czas na design i czas na kodowanie.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="icon">🎨</span>
+        <h3>Pencil.dev</h3>
+        <p>Figma-like canvas wewnątrz IDE. Projekty w formacie .pen żyją w Git. Przez MCP przekazuje dokładne koordynaty wektorowe do AI — nie screenshoty.</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">🚀</span>
+        <h3>Google Antigravity</h3>
+        <p>Darmowy agentic IDE od Google. Agent autonomicznie planuje, koduje, testuje w przeglądarce i deployuje na Cloud Run. Obsługuje Claude Sonnet 4.5 za darmo.</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">⚡</span>
+        <h3>Synergia MCP</h3>
+        <p>Pencil eksportuje design przez MCP → Antigravity agent odczytuje i generuje pixel-perfect React/HTML/CSS bez ręcznego kopiowania wartości.</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">💰</span>
+        <h3>Koszty</h3>
+        <p>Antigravity: darmowy (Gemini 3 Pro) + Claude Sonnet 4.5 gratis. Pencil: darmowy early access. Potrzebujesz tylko Claude Code ($20/mies.) do Pencil.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP -->
+  <div class="section">
+    <div class="section-label">02 — Setup</div>
+    <h2>Instalacja i konfiguracja</h2>
+
+    <div class="code-block">
+<span class="comment"># 1. Pobierz i zainstaluj Antigravity</span>
+<span class="comment"># → https://antigravity.google/ → Download → zaloguj Google Account</span>
+
+<span class="comment"># 2. Zainstaluj Pencil.dev (VS Code extension lub desktop app)</span>
+<span class="comment"># → https://pencil.dev → Add to Antigravity jako extension</span>
+
+<span class="comment"># 3. Zainstaluj Claude Code CLI (wymagane dla Pencil)</span>
+<span class="cmd">npm install -g @anthropic-ai/claude-code</span>
+<span class="cmd">claude</span> <span class="comment"># → zaloguj Anthropic account ($20/mies. plan)</span>
+
+<span class="comment"># 4. Połącz Pencil z Antigravity przez MCP</span>
+<span class="comment"># W Pencil: Settings → MCP → Add Server</span>
+<span class="comment"># Server URL: pencil://localhost (auto-konfiguracja)</span>
+
+<span class="comment"># 5. Nowy projekt landing page</span>
+<span class="cmd">npx create-next-app@latest michal-dev --typescript --tailwind --app</span>
+<span class="cmd">cd michal-dev</span>
+<span class="comment"># Otwórz folder w Antigravity: File → Open Folder</span>
+    </div>
+
+    <div class="tip">
+      <strong>Tip:</strong> Antigravity działa najlepiej w trybie "Review-driven development" — agent pyta o zgodę przed każdą akcją. Bezpieczne przy pracy z kodem produkcyjnym.
+    </div>
+  </div>
+
+  <!-- WORKFLOW PHASES -->
+  <div class="section">
+    <div class="section-label">03 — Workflow</div>
+    <h2>Proces krok po kroku</h2>
+
+    <div class="phases">
+
+      <!-- Phase 1 -->
+      <div class="phase">
+        <div class="phase-num-col">
+          <div class="phase-num" style="border-color:var(--accent1); color:var(--accent1);">1</div>
+          <div class="phase-line" style="background: linear-gradient(var(--accent1), var(--border));"></div>
+        </div>
+        <div class="phase-content">
+          <div class="phase-title">
+            Brief & Struktura
+            <span class="phase-tool" style="background:rgba(124,107,255,0.15); color:var(--accent1);">Antigravity Agent</span>
+          </div>
+          <p class="phase-desc">Agent generuje plik SPEC.md z architekturą strony na podstawie twojego opisu.</p>
+          <div class="phase-steps">
+            <div class="step"><span class="step-icon">→</span><span>W Agent Manager wpisz: <em style="color:var(--text)">"Stwórz spec dla landing page fullstack developera z Polski. Sekcje: hero, usługi, portfolio, technologie, kontakt. Stack: Next.js 14 + Tailwind."</em></span></div>
+            <div class="step"><span class="step-icon">→</span><span>Agent tworzy SPEC.md, folder struktury i package.json</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Review Artifact — zatwierdź lub zostaw komentarz inline jak w Google Docs</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase">
+        <div class="phase-num-col">
+          <div class="phase-num" style="border-color:#a08bff; color:#a08bff;">2</div>
+          <div class="phase-line" style="background: linear-gradient(#a08bff, var(--border));"></div>
+        </div>
+        <div class="phase-content">
+          <div class="phase-title">
+            Visual Design
+            <span class="phase-tool" style="background:rgba(124,107,255,0.15); color:var(--accent1);">Pencil.dev</span>
+          </div>
+          <p class="phase-desc">Projektujesz każdą sekcję na canvas. Pencil zapamiętuje tokeny designu jako JSON w repo.</p>
+          <div class="phase-steps">
+            <div class="step"><span class="step-icon">→</span><span>Otwórz nowy plik <code style="background:var(--surface2);padding:1px 6px;border-radius:4px;font-size:12px;">/design/landing.pen</code> w Pencil</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Zaprojektuj sekcję Hero: prompt w Pencil <em style="color:var(--text)">"Dark tech hero with glassmorphism card, developer avatar left, headline right"</em></span></div>
+            <div class="step"><span class="step-icon">→</span><span>Iteruj wizualnie — zmieniaj kolory, spacing, typografię bezpośrednio na canvas</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Opcja: skopiuj frame z Figmy → wklej do Pencil (zachowuje layers + auto-layout)</span></div>
+            <div class="step"><span class="step-icon">→</span><span><code style="background:var(--surface2);padding:1px 6px;border-radius:4px;font-size:12px;">git add design/landing.pen && git commit -m "design: hero section"</code></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase">
+        <div class="phase-num-col">
+          <div class="phase-num" style="border-color:var(--accent2); color:var(--accent2);">3</div>
+          <div class="phase-line" style="background: linear-gradient(var(--accent2), var(--border));"></div>
+        </div>
+        <div class="phase-content">
+          <div class="phase-title">
+            Design → Code
+            <span class="phase-tool" style="background:rgba(0,212,170,0.12); color:var(--accent2);">Pencil MCP + Antigravity</span>
+          </div>
+          <p class="phase-desc">Antigravity agent odczytuje .pen przez MCP i generuje pixel-perfect komponenty React.</p>
+          <div class="phase-steps">
+            <div class="step"><span class="step-icon">→</span><span>W Agent Manager: <em style="color:var(--text)">"Wygeneruj komponent HeroSection.tsx na podstawie design/landing.pen, sekcja 'hero'. Użyj Tailwind, shadcn/ui, animacje Framer Motion."</em></span></div>
+            <div class="step"><span class="step-icon">→</span><span>Agent odczytuje JSON z .pen → widzi dokładne px, spacing, kolory → pisze czysty kod</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Agent uruchamia <code style="background:var(--surface2);padding:1px 6px;border-radius:4px;font-size:12px;">npm run dev</code> i testuje komponent we wbudowanej przeglądarce</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Jeśli są rozbieżności (&gt;4px) — agent wraca do Pencil canvas i koryguje</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Powtórz dla każdej sekcji: ServicesSection, PortfolioGrid, TechStack, ContactForm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="phase">
+        <div class="phase-num-col">
+          <div class="phase-num" style="border-color:#ffd666; color:#ffd666;">4</div>
+          <div class="phase-line" style="background: linear-gradient(#ffd666, var(--border));"></div>
+        </div>
+        <div class="phase-content">
+          <div class="phase-title">
+            Polish & Optymalizacja
+            <span class="phase-tool" style="background:rgba(255,214,102,0.12); color:#ffd666;">Antigravity Browser</span>
+          </div>
+          <p class="phase-desc">Agent automatycznie testuje responsywność, a11y i performance w wbudowanej przeglądarce Chrome.</p>
+          <div class="phase-steps">
+            <div class="step"><span class="step-icon">→</span><span><em style="color:var(--text)">"Sprawdź responsywność na 375px, 768px, 1440px. Zrób screenshoty każdej breakpointy."</em></span></div>
+            <div class="step"><span class="step-icon">→</span><span><em style="color:var(--text)">"Uruchom Lighthouse audit i napraw wszystkie błędy performance &lt;90."</em></span></div>
+            <div class="step"><span class="step-icon">→</span><span>Agent generuje Walkthrough Artifact — dokument z wynikami i poprawkami</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Opcja: SEO meta tags, OpenGraph images, sitemap.xml — wszystko przez agenta</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="phase">
+        <div class="phase-num-col">
+          <div class="phase-num" style="border-color:var(--accent3); color:var(--accent3);">5</div>
+          <div class="phase-line" style="background: transparent;"></div>
+        </div>
+        <div class="phase-content">
+          <div class="phase-title">
+            Deploy
+            <span class="phase-tool" style="background:rgba(255,107,107,0.12); color:var(--accent3);">Vercel / Cloud Run</span>
+          </div>
+          <p class="phase-desc">Jedna komenda lub agent deployuje — Vercel dla Next.js (rekomendowane), Cloud Run dla bardziej złożonych projektów.</p>
+          <div class="phase-steps">
+            <div class="step"><span class="step-icon">→</span><span><strong style="color:var(--text)">Vercel (szybciej):</strong> <code style="background:var(--surface2);padding:1px 6px;border-radius:4px;font-size:12px;">npx vercel --prod</code> lub push do GitHub = auto-deploy</span></div>
+            <div class="step"><span class="step-icon">→</span><span><strong style="color:var(--text)">Cloud Run (Antigravity):</strong> <em style="color:var(--text)">"Deploy this app to Cloud Run with service name 'michal-dev'"</em></span></div>
+            <div class="step"><span class="step-icon">→</span><span>Agent konfiguruje DNS, SSL, environment variables automatycznie</span></div>
+            <div class="step"><span class="step-icon">→</span><span>Wyniki: Walkthrough Artifact z URL produkcyjnym + checklist weryfikacji</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tip" style="margin-top:32px">
+      <strong>⏱ Szacowany czas:</strong> Landing page dla klienta (10 sekcji) — <strong style="color:var(--text)">4–6 godzin</strong> vs tradycyjne 2–3 dni. Pierwsza strona (twoja wizytówka) może zająć więcej — to inwestycja w opanowanie workflow.
+    </div>
+  </div>
+
+  <!-- TWOJA STRONA -->
+  <div class="section">
+    <div class="section-label">04 — Twoja Landing Page</div>
+    <h2>Michał — Developer Portfolio</h2>
+    <p>Strona, która sprzedaje ciebie jako fullstack developera + electrical engineer. Unikalne połączenie — wyróżnia cię na polskim rynku.</p>
+
+    <div class="lp-grid">
+      <div class="lp-section">
+        <h3><span>🎯</span> Hero</h3>
+        <ul>
+          <li>Imię + tagline: "Buduję produkty, które działają"</li>
+          <li>Subline: "Fullstack Dev + Inżynier Elektryczny"</li>
+          <li>CTA: "Porozmawiajmy" → mailto/calendly</li>
+          <li>Stack badges: React, .NET, TypeScript</li>
+        </ul>
+      </div>
+      <div class="lp-section">
+        <h3><span>⚡</span> Usługi</h3>
+        <ul>
+          <li>Landing pages (1–3 dni, 1500–4000 zł)</li>
+          <li>Strony firmowe (3–7 dni)</li>
+          <li>Aplikacje webowe / SaaS MVP</li>
+          <li>Dokumentacja techniczna (niszowe!)</li>
+        </ul>
+      </div>
+      <div class="lp-section">
+        <h3><span>🗂️</span> Portfolio</h3>
+        <ul>
+          <li>Orbito (SaaS — w budowie)</li>
+          <li>PhysioFlow — klinika fizjoterapii</li>
+          <li>Fikcyjne projekty z Vercel</li>
+          <li>GitHub link do kodu</li>
+        </ul>
+      </div>
+      <div class="lp-section">
+        <h3><span>🛠</span> Tech Stack</h3>
+        <ul>
+          <li>ASP.NET Core, C#, EF Core</li>
+          <li>React, TypeScript, Next.js</li>
+          <li>Tailwind, Cursor, Claude</li>
+          <li>Azure / Vercel / Docker</li>
+        </ul>
+      </div>
+      <div class="lp-section">
+        <h3><span>💬</span> O mnie</h3>
+        <ul>
+          <li>Inżynier z 10-letnim doświadczeniem</li>
+          <li>Polska + projekty zagraniczne</li>
+          <li>AI-assisted development</li>
+          <li>Skupiam się na czasie dostawy</li>
+        </ul>
+      </div>
+      <div class="lp-section">
+        <h3><span>📬</span> Kontakt</h3>
+        <ul>
+          <li>Formularz (Resend / Formspree)</li>
+          <li>LinkedIn profil</li>
+          <li>GitHub link</li>
+          <li>Calendly — 30-min konsultacja</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="warn" style="margin-top:20px">
+      <strong>Ważne dla SEO:</strong> Użyj frazy "tworzenie stron internetowych [miasto]" i "web developer Polska" w meta description. Lokalne frazy konwertują lepiej niż ogólne na rynku freelancerskim.
+    </div>
+  </div>
+
+  <!-- FREELANCE MODEL -->
+  <div class="section">
+    <div class="section-label">05 — Model Biznesowy</div>
+    <h2>Pricing po godzinach</h2>
+
+    <div class="pricing-row">
+      <div class="price-card">
+        <div class="type">Landing Page</div>
+        <div class="price">2 000 <span>zł</span></div>
+        <div class="desc">1–3 sekcje, design + kod + deploy. Czas: ~4h z tym workflow.</div>
+      </div>
+      <div class="price-card highlight">
+        <div class="type">Strona firmowa</div>
+        <div class="price">4 000 <span>zł</span></div>
+        <div class="desc">5–8 sekcji, CMS opcja, responsywna. Czas: ~10h realnie.</div>
+      </div>
+      <div class="price-card">
+        <div class="type">MVP / App</div>
+        <div class="price">8 000+ <span>zł</span></div>
+        <div class="desc">Autentykacja, baza danych, panel admina. Negocjacja.</div>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:20px">
+      <strong>Kalkulacja:</strong> 2 landing pages miesięcznie × 2 000 zł = 4 000 zł brutto. Pokrywa Claude Code ($20 ≈ 80 zł) + Cursor Pro (~100 zł) + częściowo koszty Orbito.
+    </div>
+  </div>
+
+  <!-- ORBITO CONNECTION -->
+  <div class="section">
+    <div class="section-label">06 — Orbito Context</div>
+    <h2>Jak to wspiera Orbito</h2>
+
+    <div class="orbito-box">
+      <h3>Miesięczny bilans narzędziowy</h3>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Freelance pokrywa koszty, Orbito buduje się za "darmo"</p>
+
+      <div class="cost-row">
+        <span class="label">Claude Code (Pencil backend)</span>
+        <span class="val red">-$20 (~80 zł)</span>
+      </div>
+      <div class="cost-row">
+        <span class="label">Cursor Pro</span>
+        <span class="val red">-$20 (~80 zł)</span>
+      </div>
+      <div class="cost-row">
+        <span class="label">Antigravity</span>
+        <span class="val green">FREE (Gemini 3 Pro)</span>
+      </div>
+      <div class="cost-row">
+        <span class="label">Pencil.dev (early access)</span>
+        <span class="val green">FREE</span>
+      </div>
+      <div class="cost-row">
+        <span class="label">Vercel Hobby</span>
+        <span class="val green">FREE</span>
+      </div>
+      <div class="cost-row" style="padding-top:16px;font-weight:500;">
+        <span class="label">1 landing page / mies. pokrywa wszystko</span>
+        <span class="val green">≈ 2 000 zł / mies.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMPT TEMPLATES -->
+  <div class="section">
+    <div class="section-label">07 — Quick Reference</div>
+    <h2>Gotowe prompty do Antigravity</h2>
+
+    <div class="code-block">
+<span class="comment">// PROMPT 1: Inicjalizacja projektu landing page</span>
+<span class="str">"Stwórz projekt Next.js 14 z TypeScript i Tailwind dla portfolio
+web developera. Komponenty: HeroSection, ServicesGrid, PortfolioGrid,
+TechStack, ContactForm. Każdy jako oddzielny .tsx w /components.
+Użyj shadcn/ui, Framer Motion dla animacji. Styl: dark mode, nowoczesny."</span>
+
+<span class="comment">// PROMPT 2: Design → Kod przez Pencil MCP</span>
+<span class="str">"Odczytaj plik design/landing.pen (sekcja 'hero') przez MCP i wygeneruj
+HeroSection.tsx pixel-perfect. Zachowaj dokładne wartości padding, font-size
+i kolory z designu. Dodaj entrance animation przy load."</span>
+
+<span class="comment">// PROMPT 3: Testy + Deploy</span>
+<span class="str">"Przetestuj aplikację w przeglądarce na 3 breakpointach: 375px, 768px, 1440px.
+Zrób screenshoty. Napraw wszelkie problemy z layoutem. Następnie zrób
+Lighthouse audit i popraw wszystkie metryki do min. 90. Po testach
+zdeployuj na Vercel przez CLI."</span>
+
+<span class="comment">// PROMPT 4: Nowy klient (duplikuj projekt)</span>
+<span class="str">"Skopiuj strukturę projektu michal-dev jako szablon dla nowego klienta.
+Zmień kolory na paletę: primary=#2563eb, accent=#f59e0b. Zamień treści
+na placeholdery [FIRMA], [TAGLINE], [USŁUGI]. Stwórz README z instrukcją."</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-label">Pencil + Antigravity Workflow v1.0</span>
+    <span class="footer-label" style="color:var(--accent1)">Orbito Project — 2026</span>
+  </div>
+
+</div>
+</body>
+</html>

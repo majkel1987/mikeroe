@@ -1,0 +1,37 @@
+[
+  {
+    "id": "discovery",
+    "phase": "01",
+    "title": "Discovery",
+    "description": "Analiza biznesowa, warsztaty i dobór odpowiedniej technologii.",
+    "icon": "Search"
+  },
+  {
+    "id": "architecture",
+    "phase": "02",
+    "title": "Architektura & UI",
+    "description": "Projektowanie interfejsu (UX/UI) oraz solidnej struktury bazy danych.",
+    "icon": "PenTool"
+  },
+  {
+    "id": "development",
+    "phase": "03",
+    "title": "Development",
+    "description": "Kodowanie od A do Z (niezawodny backend w C# i responsywny frontend w React).",
+    "icon": "Code"
+  },
+  {
+    "id": "testing",
+    "phase": "04",
+    "title": "Testy & Optymalizacja",
+    "description": "Szlifowanie wydajności, bezpieczeństwa i Core Web Vitals.",
+    "icon": "Gauge"
+  },
+  {
+    "id": "launch",
+    "phase": "05",
+    "title": "Launch",
+    "description": "Deploy na produkcję, konfiguracja serwerów i stały monitoring.",
+    "icon": "Rocket"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "skills": {
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "computedHash": "645b891da1edbae76ab79c7b088d4e73397464f8396edaf773c0e01971ce75d6"
+    },
+    "seo-audit": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "941f6f4db0f79248f6480256cf1838ed19bc1a0d70f499bb756f491142625cb4"
+    },
+    "web-performance-optimization": {
+      "source": "secondsky/claude-skills",
+      "sourceType": "github",
+      "computedHash": "84baabbca516bf3ea42f44199ed3801053eec107ba078478c6f32b65f4462864"
+    }
+  }
+}

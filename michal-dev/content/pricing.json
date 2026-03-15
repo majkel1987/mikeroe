@@ -1,0 +1,100 @@
+[
+  {
+    "id": "1",
+    "tier": "Starter",
+    "description": "Nowoczesna jednostronicowa wizytówka, która konwertuje ruch na klientów.",
+    "price": "2000-2500",
+    "currency": "PLN netto",
+    "prefix": "od",
+    "suffix": "",
+    "timeframe": "2–4 tygodni",
+    "ctaText": "Wybieram Starter",
+    "features": [
+      "1-sekcyjny landing page",
+      "Responsive design (1 iteracja zmian)",
+      "SEO on-page"
+    ],
+    "specsIncluded": [
+      "1-sekcyjny landing page",
+      "Responsive design (1 iteracja zmian)",
+      "Podstawowa optymalizacja SEO on-page",
+      "Deployment na Vercel w cenie",
+      "Pomoc w konfiguracji istniejącej domeny klienta"
+    ],
+    "specsExcluded": [
+      "Zakup/konfiguracja domeny od zera",
+      "Edycja zdjęć/grafik",
+      "Custom design (używam gotowych z Figma/Tailwind)",
+      "Dedykowany backend i baza danych",
+      "Panel administracyjny"
+    ],
+    "highlighted": false
+  },
+  {
+    "id": "2",
+    "tier": "Web App MVP",
+    "description": "Działający produkt cyfrowy, gotowy na przyjęcie pierwszych realnych użytkowników.",
+    "price": "6000-9000",
+    "currency": "PLN netto",
+    "prefix": "od",
+    "suffix": "",
+    "timeframe": "4–10 tygodni",
+    "ctaText": "Wybieram Web App",
+    "features": [
+      "Core React + ASP.NET Core",
+      "Do 3 integracji API",
+      "Autentykacja",
+      "Podstawowy frontend admin"
+    ],
+    "specsIncluded": [
+      "Dedykowany backend (C# / ASP.NET Core)",
+      "Dynamiczny frontend z logiką w React",
+      "Do 3 integracji API",
+      "Autentykacja i autoryzacja użytkowników",
+      "Podstawowy frontend admin",
+      "Deployment na Vercel w cenie",
+      "Pomoc w konfiguracji istniejącej domeny klienta"
+    ],
+    "specsExcluded": [
+      "Zakup/konfiguracja domeny od zera",
+      "Edycja zdjęć/grafik",
+      "Custom design (używam gotowych z Figma/Tailwind)",
+      "Złożone integracje z zewnętrznymi API (więcej niż 3)",
+      "Dedykowana architektura mikroserwisów"
+    ],
+    "highlighted": true
+  },
+  {
+    "id": "3",
+    "tier": "Rozwój SaaS",
+    "description": "Skalowalna architektura i złożona logika biznesowa dla zaawansowanych platform.",
+    "price": "Wycena indywidualna",
+    "currency": "",
+    "prefix": "",
+    "suffix": "",
+    "timeframe": "Dedykowany harmonogram",
+    "ctaText": "Zapytaj o wycenę",
+    "features": [
+      "Integracje CRM/DB (do 5)",
+      "Monitoring błędów",
+      "Architektura multi-tenant",
+      "Cloud-ready (Vercel)"
+    ],
+    "specsIncluded": [
+      "Architektura multi-tenant",
+      "Integracje CRM/DB (do 5)",
+      "Zaawansowany monitoring i logowanie błędów",
+      "Cloud-ready (w tym Vercel)",
+      "Wieloetapowe planowanie i harmonogramowanie",
+      "Deployment na Vercel w cenie",
+      "Pomoc w konfiguracji istniejącej domeny klienta"
+    ],
+    "specsExcluded": [
+      "Zakup/konfiguracja domeny od zera",
+      "Edycja zdjęć/grafik",
+      "Custom design (używam gotowych z Figma/Tailwind)",
+      "Koszty zewnętrznych usług (płatności, cloud poza Vercelem)"
+    ],
+    "highlighted": false
+  }
+]

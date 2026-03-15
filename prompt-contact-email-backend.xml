@@ -1,0 +1,286 @@
+<task>
+  Implement email backend for the Contact section form.
+  The form already exists in components/sections/ContactSection.tsx and uses
+  React Hook Form + Zod validation + a server action at app/actions/contact.ts.
+  
+  Goal: When someone submits the contact form, an email with their inquiry
+  is sent TO m.sarnacki@icloud.com using a Gmail SMTP relay (Nodemailer).
+  The email must use a polished, branded HTML template matching the site's
+  dark aesthetic.
+</task>
+
+<context>
+  <project>
+    Next.js 14 (App Router), TypeScript, Tailwind CSS v3.4.
+    Single-page portfolio site for a Polish fullstack developer (mikeroe.pl).
+    Dark theme with design tokens defined in globals.css + tailwind.config.ts.
+  </project>
+
+  <existing-form>
+    File: components/sections/ContactSection.tsx
+    Fields collected:
+      - name (string, min 2 chars)
+      - email (string, valid email — this is the SENDER / client's email)
+      - message (string, min 10 chars — project description)
+      - website (string, optional — HONEYPOT field, hidden from users)
+    Validation: Zod schema (client-side) + should be mirrored server-side.
+    Submission: calls `submitContact` server action from `@/app/actions/contact`.
+    Status states: idle → loading → success | error.
+  </existing-form>
+
+  <existing-server-action>
+    File: app/actions/contact.ts
+    This file already exists but may be a stub or incomplete.
+    Rewrite it fully per the spec below.
+  </existing-server-action>
+
+  <email-config>
+    Transport: Gmail SMTP via Nodemailer.
+    The site owner has a Google account with an App Password configured.
+    SMTP host: smtp.gmail.com, port: 465, secure: true.
+    
+    Environment variables (to be added to .env.local):
+      GMAIL_USER=your-gmail@gmail.com        (Gmail address used as SMTP sender)
+      GMAIL_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx  (16-char Google App Password)
+      CONTACT_EMAIL_TO=m.sarnacki@icloud.com  (where all inquiries land)
+  </email-config>
+</context>
+
+<dependencies>
+  <install>npm install nodemailer</install>
+  <install>npm install -D @types/nodemailer</install>
+  <note>
+    Nodemailer runs server-side only (inside Server Actions / Route Handlers).
+    Never import nodemailer in a "use client" component.
+  </note>
+</dependencies>
+
+<rules>
+  <rule name="server-only">
+    All email logic lives in server-side files only.
+    The server action file (app/actions/contact.ts) must start with "use server".
+    Do NOT add "use client" to any file that imports nodemailer.
+  </rule>
+
+  <rule name="validation-parity">
+    Mirror the exact same Zod schema from ContactSection.tsx on the server side.
+    Validate all fields server-side BEFORE attempting to send email.
+    If honeypot field "website" has any value → silently return success (bot trap).
+  </rule>
+
+  <rule name="error-handling">
+    Wrap nodemailer sendMail in try/catch.
+    On SMTP failure: return { success: false, errors: { form: "Nie udało się wysłać wiadomości. Spróbuj ponownie." } }.
+    On validation failure: return field-level errors matching the existing error display logic in ContactSection.
+    Never expose SMTP credentials or raw error messages to the client.
+  </rule>
+
+  <rule name="response-shape">
+    The submitContact action must return:
+      { success: true }  — on successful send
+      { success: false, errors: { [field]: string } | { form: string } }  — on failure
+    This matches the existing ContactSection.tsx consumption pattern.
+  </rule>
+
+  <rule name="env-safety">
+    Add GMAIL_USER, GMAIL_APP_PASSWORD, CONTACT_EMAIL_TO to .env.local.
+    Add .env.local to .gitignore if not already there.
+    Create a .env.example file with placeholder values for documentation.
+  </rule>
+
+  <rule name="do-not-touch-frontend">
+    Do NOT modify ContactSection.tsx unless absolutely necessary.
+    The frontend form, validation, animations, and UI are already complete.
+    Only the server action and email utility need implementation.
+  </rule>
+</rules>
+
+<implementation>
+
+  <file path="lib/email.ts" purpose="Nodemailer transporter + send utility">
+    Create a reusable email module:
+
+    1. Create nodemailer transporter with Gmail SMTP config:
+       - host: smtp.gmail.com
+       - port: 465
+       - secure: true
+       - auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD }
+
+    2. Export async function sendContactEmail(data: { name, email, message }):
+       - Builds the HTML email from the template (see email-template section below)
+       - Sends via transporter.sendMail({
+           from: `"Mikeroe.pl Contact" <${process.env.GMAIL_USER}>`,
+           to: process.env.CONTACT_EMAIL_TO,
+           replyTo: data.email,
+           subject: `Nowe zapytanie od ${data.name} — mikeroe.pl`,
+           html: renderedTemplate,
+           text: plainTextFallback,
+         })
+       - Returns { success: true } or throws
+
+    Important: replyTo is set to the CLIENT's email so you can reply directly
+    from your iCloud inbox and it goes to the person who submitted the form.
+  </file>
+
+  <file path="app/actions/contact.ts" purpose="Server Action — full rewrite">
+    "use server"
+
+    1. Import Zod, define server-side schema (mirror client schema exactly):
+       name: z.string().min(2)
+       email: z.string().email()
+       message: z.string().min(10)
+       website: z.string().optional()
+
+    2. Export async function submitContact(prevState: unknown, formData: FormData):
+       a. Extract fields from formData
+       b. Honeypot check: if website field is non-empty → return { success: true } (silent trap)
+       c. Validate with Zod schema
+          - On failure: map ZodError to field-level error messages, return { success: false, errors }
+       d. Call sendContactEmail({ name, email, message })
+          - On success: return { success: true }
+          - On catch: return { success: false, errors: { form: "Nie udało się wysłać wiadomości. Spróbuj ponownie." } }
+  </file>
+
+  <file path=".env.example" purpose="Document required env vars">
+    # Gmail SMTP (use Google App Password, NOT your regular password)
+    # Generate at: https://myaccount.google.com/apppasswords
+    GMAIL_USER=your-gmail@gmail.com
+    GMAIL_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+
+    # Where contact form emails are delivered
+    CONTACT_EMAIL_TO=m.sarnacki@icloud.com
+  </file>
+
+</implementation>
+
+<email-template>
+  <design-brief>
+    The email template must feel like it belongs to the mikeroe.pl site.
+    Dark, editorial, premium — not a generic white corporate email.
+    It should look great in Apple Mail, Gmail, and Outlook.
+  </design-brief>
+
+  <style>
+    Background: #0a0a0f (matches site --bg)
+    Card/container: #111118 (matches site --surface)
+    Border: #2a2a38 (matches site --border)
+    Accent purple: #7c6bff (matches site --accent1)
+    Accent teal: #00d4aa (matches site --accent2)
+    Text primary: #e8e8f0 (matches site --text)
+    Text muted: #7070a0 (matches site --muted)
+    Font stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif
+      (web-safe fallback — custom fonts won't load in email clients)
+  </style>
+
+  <structure>
+    Use table-based layout for email client compatibility.
+    Inline all CSS (no external stylesheets, no <style> block — Outlook strips them).
+
+    Layout (top to bottom):
+
+    1. OUTER WRAPPER
+       - Full-width background: #0a0a0f
+       - max-width: 600px centered container
+
+    2. HEADER BAR
+       - Subtle top border: 3px solid #7c6bff (purple accent line)
+       - Logo area: text "MIKEROE.PL" in uppercase, letter-spacing 0.2em,
+         color #7c6bff, font-size 13px, font-weight 600
+       - Below: thin divider line (#2a2a38)
+
+    3. MAIN CONTENT CARD
+       - Background: #111118
+       - Border: 1px solid #2a2a38
+       - Border-radius: 12px (degrades gracefully in Outlook)
+       - Padding: 32px
+
+       Inside the card:
+
+       a. BADGE
+          - Small pill/badge: "NOWE ZAPYTANIE" in uppercase
+          - Background: rgba(124,107,255,0.12) → fallback #1a1730
+          - Text: #7c6bff, font-size 11px, letter-spacing 0.15em
+          - Border-radius: 6px, padding: 4px 12px
+
+       b. HEADING
+          - "Masz nową wiadomość" — font-size 24px, color #e8e8f0, font-weight 700
+
+       c. DATA TABLE (the actual form submission)
+          Three rows, each with:
+          - Label (left): uppercase, font-size 11px, color #7070a0, letter-spacing 0.15em
+          - Value (right/below): font-size 15px, color #e8e8f0
+          
+          Row 1: NADAWCA → {name}
+          Row 2: EMAIL → {email} (make this a mailto: link, color #7c6bff)
+          Row 3: WIADOMOŚĆ → {message} (preserve line breaks, use white-space: pre-wrap)
+
+          Separate rows with subtle dividers (#2a2a38).
+
+       d. REPLY BUTTON (optional but nice)
+          - Centered CTA: "Odpowiedz na wiadomość"
+          - href: mailto:{email}?subject=Re: Twoje zapytanie — mikeroe.pl
+          - Background: #7c6bff, color: #ffffff, border-radius: 8px
+          - Padding: 14px 28px, font-weight 600, text-decoration none
+          - Fallback for Outlook: VML button background
+
+    4. FOOTER
+       - Padding: 24px
+       - Small text, color #7070a0, font-size 12px
+       - Line 1: "Ten email został wygenerowany automatycznie przez formularz na mikeroe.pl"
+       - Line 2: Timestamp — "{date}, {time} CET"
+       - Subtle teal (#00d4aa) dot before "mikeroe.pl" as brand accent
+  </structure>
+
+  <plain-text-fallback>
+    Always include a plain-text version:
+
+    ---
+    NOWE ZAPYTANIE — mikeroe.pl
+    ---
+    Nadawca: {name}
+    Email: {email}
+
+    Wiadomość:
+    {message}
+    ---
+    Wysłano: {date} {time} CET
+  </plain-text-fallback>
+
+  <email-client-notes>
+    - All CSS must be inline (style="" attributes)
+    - Use table/tr/td for layout, not divs (Outlook compatibility)
+    - No CSS grid, flexbox, or calc() in emails
+    - border-radius won't render in Outlook — that's fine, degrades to square
+    - Use &amp;#8203; (zero-width space) to prevent email clients collapsing empty cells
+    - Test dark mode: add meta color-scheme: dark + supported-color-schemes
+    - Image-less design (no external image URLs that might get blocked)
+  </email-client-notes>
+</email-template>
+
+<verification>
+  After implementation, verify:
+
+  1. Run `npm run build` — no TypeScript errors
+  2. Run `npm run dev` and submit the form with test data
+  3. Check that email arrives at the configured CONTACT_EMAIL_TO address
+  4. Verify replyTo header — clicking Reply in email client should address the form submitter
+  5. Test honeypot: submit with "website" field filled → should return success but NOT send email
+  6. Test validation: submit empty form → should show field-level errors
+  7. Check email renders correctly (open in browser or send to Gmail/Apple Mail)
+</verification>
+
+<env-setup-instructions>
+  Before running, the site owner must:
+
+  1. Go to https://myaccount.google.com/apppasswords
+     (requires 2FA enabled on the Google account)
+  2. Generate a new App Password (select "Mail" + "Other" → name it "mikeroe.pl")
+  3. Copy the 16-character password
+  4. Create .env.local in project root:
+
+     GMAIL_USER=your-actual-gmail@gmail.com
+     GMAIL_APP_PASSWORD=abcd-efgh-ijkl-mnop
+     CONTACT_EMAIL_TO=m.sarnacki@icloud.com
+
+  5. Restart the dev server after adding env vars
+</env-setup-instructions>
