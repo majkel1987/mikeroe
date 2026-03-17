@@ -177,7 +177,7 @@ export default function TechOrbit() {
         return (
           <div
             key={orbit.id}
-            className="orbit-ring absolute rounded-full"
+            className="orbit-ring absolute rounded-full pointer-events-none"
             style={{
               inset: `${insetPercent}%`,
               border: `1px solid rgba(255,255,255,${orbit.borderOpacity})`,
@@ -191,20 +191,20 @@ export default function TechOrbit() {
               const y = 50 + 50 * Math.sin(angleRad);
 
               return (
-                // Outer wrapper for positioning (translate)
+                // Outer wrapper: only used for positioning, no pointer events
                 <div
                   key={tech.name}
-                  className="absolute"
+                  className="absolute pointer-events-none"
                   style={{
                     left: `${x}%`,
                     top: `${y}%`,
                     transform: 'translate(-50%, -50%)',
                   }}
                 >
-                  {/* Inner element for counter-rotation */}
+                  {/* Counter-rotating icon node — this is the hover target */}
                   <div
                     data-orbit={orbitIndex}
-                    className="tech-icon-node w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-surface/80 backdrop-blur-md border-[1.5px] border-white/10 flex items-center justify-center transition-all duration-300 hover:scale-[1.2] hover:border-current group"
+                    className="tech-icon-node group pointer-events-auto w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-surface/80 backdrop-blur-md border-[1.5px] border-white/10 flex items-center justify-center transition-all duration-300 hover:scale-[1.2] hover:border-current relative"
                     style={{
                       color: tech.color,
                       boxShadow: `0 0 12px ${tech.color}20`,
@@ -223,7 +223,7 @@ export default function TechOrbit() {
                         boxShadow: `0 0 24px ${tech.color}50`,
                       }}
                     />
-                    {/* Tooltip */}
+                    {/* Tooltip — inside counter-rotating div so text stays upright */}
                     <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-surface border border-white/10 rounded text-[10px] font-mono text-text whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
                       {tech.name}
                     </div>
