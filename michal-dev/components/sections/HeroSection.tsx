@@ -7,6 +7,7 @@ import { ArrowDown } from 'lucide-react';
 import { FlipWords } from '../ui/flip-words';
 import { TypewriterEffectSmooth } from '../ui/typewriter-effect';
 import { TextGenerateEffect } from '../ui/text-generate-effect';
+import ColourfulText from '../ui/colourful-text';
 
 const HERO_CONTENT = {
   badge: "WEB DEVELOPER • SAAS BUILDER",
@@ -98,15 +99,15 @@ export default function HeroSection() {
 
   return (
     <section ref={sectionRef} id="hero" className="relative w-full overflow-hidden">
-      <div className="w-full max-w-[1800px] mx-auto px-4 lg:px-12 py-20 lg:py-0 h-dvh min-h-[800px] grid grid-cols-1 lg:grid-cols-2 items-center gap-10 lg:gap-20 pb-16">
+      <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12 py-0 h-dvh min-h-[580px] grid grid-cols-1 xl:grid-cols-2 items-center gap-10 xl:gap-20 pb-16">
 
-        {/* Left Column (TechOrbit Graphics) */}
-        <div className="relative w-full max-w-[800px] 2xl:max-w-[950px] mx-auto aspect-square flex items-center justify-center order-2 lg:order-1">
+        {/* Left Column (TechOrbit Graphics) – hidden until xl */}
+        <div className="hidden xl:flex relative w-full max-w-[800px] 2xl:max-w-[950px] mx-auto aspect-square items-center justify-center order-2 xl:order-1">
           <TechOrbit />
         </div>
 
         {/* Right Column (Text & CTAs) */}
-        <div className="w-full flex flex-col gap-5 lg:gap-7 items-start z-10 order-1 lg:order-2">
+        <div className="w-full flex flex-col gap-5 lg:gap-7 items-start z-10 order-1 xl:order-2 justify-center h-full">
 
           {/* Pre-title badge */}
           <div
@@ -120,12 +121,20 @@ export default function HeroSection() {
 
           {/* H1 Headline */}
           <div ref={headlineRef} className="flex flex-col gap-2">
-            <div className="text-gray-50 font-jakarta font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-[64px] leading-[1.1] tracking-tight -ml-2">
+            <div className="text-gray-50 font-jakarta font-bold text-3xl md:text-4xl lg:text-6xl xl:text-[64px] leading-[1.1] tracking-tight -ml-2">
               <FlipWords words={HERO_CONTENT.greetings} duration={3000} className="text-[#FF6B35]" />
             </div>
-            <h1 className="flex flex-col text-gray-50 font-jakarta font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-[64px] leading-[1.1] tracking-tight h-auto min-h-[1.5em] pb-2 sm:pb-3 lg:pb-0">
-              <TypewriterEffectSmooth words={headlineWordsLine1} className="m-0 space-x-1 sm:space-x-2 lg:space-x-3 w-full max-w-full overflow-hidden whitespace-normal sm:whitespace-nowrap flex-wrap sm:flex-nowrap !leading-[1.1]" cursorClassName="hidden" />
-              <TypewriterEffectSmooth words={headlineWordsLine2} className="m-0 space-x-1 sm:space-x-2 lg:space-x-3 w-full max-w-full overflow-hidden whitespace-normal sm:whitespace-nowrap flex-wrap sm:flex-nowrap !leading-[1.1]" cursorClassName="bg-[#FF6B35] h-[1em] self-center ml-1 sm:ml-2" />
+
+            {/* Mobile + Tablet: static headline (up to lg), no typewriter overflow */}
+            <h1 className="lg:hidden text-gray-50 font-jakarta font-bold text-3xl md:text-4xl leading-[1.2] tracking-tight">
+              Buduję <ColourfulText text="aplikacje" /> webowe,{' '}
+              <span className="block">na których możesz polegać.</span>
+            </h1>
+
+            {/* lg (1024px+) single col full-width + xl (1280px+) 2-col: animated TypewriterEffectSmooth */}
+            <h1 className="hidden lg:flex flex-col text-gray-50 font-jakarta font-bold lg:text-5xl xl:text-6xl 2xl:text-[64px] leading-[1.1] tracking-tight h-auto min-h-[1.5em] pb-3 lg:pb-0">
+              <TypewriterEffectSmooth words={headlineWordsLine1} className="m-0 space-x-2 lg:space-x-3 w-full max-w-full overflow-hidden !leading-[1.1]" cursorClassName="hidden" />
+              <TypewriterEffectSmooth words={headlineWordsLine2} className="m-0 space-x-2 lg:space-x-3 w-full max-w-full overflow-hidden !leading-[1.1]" cursorClassName="bg-[#FF6B35] h-[1em] self-center ml-2" />
             </h1>
           </div>
 
@@ -140,13 +149,13 @@ export default function HeroSection() {
           {/* CTAs */}
           <div
             ref={ctaRef}
-            className="flex flex-row flex-wrap items-center gap-4 mt-1"
+            className="flex flex-row flex-nowrap items-center gap-3 mt-1 w-full"
           >
             {/* Primary CTA – orange */}
             <a
               href="#contact"
               onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="cursor-pointer px-7 py-3.5 bg-[#FF6B35] rounded-xl text-white font-sans font-semibold text-sm sm:text-base shadow-lg shadow-[#FF6B35]/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 text-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="cursor-pointer flex-1 px-5 py-3.5 bg-[#FF6B35] rounded-xl text-white font-sans font-semibold text-sm sm:text-base shadow-lg shadow-[#FF6B35]/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 text-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               {HERO_CONTENT.primaryCta}
             </a>
@@ -154,7 +163,7 @@ export default function HeroSection() {
             <a
               href="#portfolio"
               onClick={(e) => { e.preventDefault(); document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="cursor-pointer px-7 py-3.5 border border-gray-500 rounded-xl text-gray-200 bg-transparent font-sans font-medium text-sm sm:text-base hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 transition-all duration-300 text-center focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="cursor-pointer flex-1 px-5 py-3.5 border border-gray-500 rounded-xl text-gray-200 bg-transparent font-sans font-medium text-sm sm:text-base hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 transition-all duration-300 text-center focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               {HERO_CONTENT.secondaryCta}
             </a>

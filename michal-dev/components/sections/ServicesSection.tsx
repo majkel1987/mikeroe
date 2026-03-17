@@ -93,7 +93,7 @@ export default function ServicesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="services" className="w-full pt-20 md:pt-28 pb-10 md:pb-12 px-4 sm:px-8 xl:px-16 2xl:px-24">
+    <section ref={sectionRef} id="services" className="w-full pt-10 md:pt-28 pb-5 md:pb-12 px-4 sm:px-8 xl:px-16 2xl:px-24">
       <div className="w-full max-w-[1800px] mx-auto flex flex-col gap-14 md:gap-16 relative z-10">
 
         {/* ── Section Header ── */}

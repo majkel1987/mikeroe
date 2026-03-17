@@ -91,7 +91,7 @@ export default function PortfolioSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="portfolio" className="w-full relative py-24 md:py-32 xl:py-40 min-h-screen flex flex-col justify-center overflow-hidden px-4 sm:px-8 xl:px-16 2xl:px-24">
+    <section ref={sectionRef} id="portfolio" className="w-full relative py-12 md:py-32 xl:py-40 min-h-screen flex flex-col justify-center overflow-hidden px-4 sm:px-8 xl:px-16 2xl:px-24">
       
       {/* Container - Utilizing full desktop real estate (wider max-width) */}
       <div className="w-full max-w-[1800px] mx-auto flex flex-col gap-16 md:gap-24 relative z-10">

@@ -116,7 +116,7 @@ export default function PricingSection() {
 
   return (
     <>
-      <section ref={sectionRef} id="pricing" className="w-full py-16 md:py-28 flex justify-center relative overflow-hidden px-4 sm:px-8 xl:px-16 2xl:px-24">
+      <section ref={sectionRef} id="pricing" className="w-full py-8 md:py-28 flex justify-center relative overflow-hidden px-4 sm:px-8 xl:px-16 2xl:px-24">
 
         {/* Background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] bg-[#FF6B35]/8 blur-[130px] rounded-full pointer-events-none" />

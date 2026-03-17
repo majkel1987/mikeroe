@@ -137,7 +137,7 @@ export default function TechStackSection() {
     <section
       ref={sectionRef}
       id="tech-stack"
-      className="w-full pt-24 pb-24 px-4 sm:px-8 xl:px-16 2xl:px-24"
+      className="w-full pt-12 md:pt-24 pb-12 md:pb-24 px-4 sm:px-8 xl:px-16 2xl:px-24"
       aria-label="Tech Stack — narzędzia i technologie"
     >
       <div className="w-full max-w-[1800px] mx-auto flex flex-col gap-12 md:gap-16 relative z-10">

@@ -137,7 +137,7 @@ export default function ContactSection() {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative py-24 text-text w-full overflow-hidden px-4 sm:px-8 xl:px-16 2xl:px-24"
+      className="relative py-12 md:py-24 text-text w-full overflow-hidden px-4 sm:px-8 xl:px-16 2xl:px-24"
     >
       {/* Subtle ambient glow */}
       <div
