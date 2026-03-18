@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useMotionValueEvent, AnimatePresence, useSpring } from 'framer-motion';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 
@@ -20,8 +20,15 @@ const navLinks: NavLink[] = [
 ];
 
 export default function Navbar() {
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // Smooth spring animation for progress bar
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
   const [activeSection, setActiveSection] = useState('Usługi');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { lang, toggleLang } = useLanguage();
@@ -113,10 +120,16 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] bg-[#FF6B35] z-[60] origin-left"
+        style={{ scaleX }}
+      />
+
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-          isScrolled 
-            ? 'bg-bg/85 backdrop-blur-[16px] border-b border-border/50' 
+          isScrolled
+            ? 'bg-bg/85 backdrop-blur-[16px] border-b border-border/50'
             : 'bg-transparent border-b border-transparent'
         }`}
         initial={{ y: -100 }}

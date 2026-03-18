@@ -52,6 +52,7 @@ export default function PortfolioSection() {
   const labelRef = useRef<HTMLSpanElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -60,6 +61,7 @@ export default function PortfolioSection() {
       gsap.set(labelRef.current, { opacity: 0, x: -20 });
       gsap.set(dividerRef.current, { scaleX: 0, transformOrigin: 'left center' });
       gsap.set(titleRef.current, { opacity: 0, y: 30 });
+      gsap.set(subtitleRef.current, { opacity: 0, y: 20 });
 
       const projectCards = gridRef.current?.querySelectorAll('.project-card');
       if (projectCards) {
@@ -96,7 +98,15 @@ export default function PortfolioSection() {
         y: 0,
         duration: 0.7,
         ease: 'power3.out',
-      }, '-=0.4');
+      }, '-=0.4')
+
+      // 4. Subtitle fades up
+      .to(subtitleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+      }, '-=0.3');
 
       if (projectCards && projectCards.length > 0) {
         tl.to(projectCards, {
@@ -106,6 +116,26 @@ export default function PortfolioSection() {
           stagger: 0.2,
           ease: 'power3.out',
         }, '-=0.3');
+
+        // Portfolio parallax enhancement: separate ScrollTrigger per card
+        projectCards.forEach((card) => {
+          const mockup = card.querySelector('.laptop-mockup');
+          if (mockup) {
+            gsap.fromTo(mockup,
+              { y: -20 },
+              {
+                y: 20,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top bottom',
+                  end: 'bottom top',
+                  scrub: true,
+                },
+              }
+            );
+          }
+        });
       }
 
     }, sectionRef);
@@ -130,7 +160,7 @@ export default function PortfolioSection() {
           <h2 ref={titleRef} className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]">
             {t.title}
           </h2>
-          <p className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
+          <p ref={subtitleRef} className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
             {t.subtitle}
           </p>
         </div>
@@ -153,7 +183,7 @@ export default function PortfolioSection() {
                   <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay pointer-events-none bg-[length:100px_100px]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }}></div>
 
                   {/* Laptop Mockup Wrapper - Wide landscape oriented */}
-                  <div className="relative w-full aspect-[16/10] bg-gradient-to-b from-gray-700/50 via-gray-900/90 to-black p-[2px] rounded-[1.2rem] lg:rounded-[1.8rem] shadow-[0_40px_60px_-15px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.3)] mb-6 lg:mb-8 shrink-0 z-20 transition-transform duration-700 group-hover/inner:scale-[1.02]">
+                  <div className="laptop-mockup relative w-full aspect-[16/10] bg-gradient-to-b from-gray-700/50 via-gray-900/90 to-black p-[2px] rounded-[1.2rem] lg:rounded-[1.8rem] shadow-[0_40px_60px_-15px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.3)] mb-6 lg:mb-8 shrink-0 z-20 transition-transform duration-700 group-hover/inner:scale-[1.02]">
                     
                     {/* Inner Black Bezel */}
                     <div className="relative w-full h-full bg-[#050505] rounded-[1.1rem] lg:rounded-[1.7rem] flex flex-col overflow-hidden pb-4 lg:pb-6 shadow-[inset_0_0_20px_rgba(0,0,0,1)]">
