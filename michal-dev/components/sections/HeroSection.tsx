@@ -114,7 +114,7 @@ export default function HeroSection() {
           </div>
 
           {/* Bio */}
-          <div ref={bioRef} className="text-gray-400 font-sans font-normal text-base sm:text-lg leading-relaxed max-w-xl">
+          <div ref={bioRef} className="text-gray-300 font-sans font-normal text-base sm:text-lg leading-relaxed max-w-xl">
             <TextGenerateEffect key={`bio-${lang}`} words={t.bio} />
           </div>
 
@@ -123,14 +123,14 @@ export default function HeroSection() {
             <a
               href="#contact"
               onClick={(e) => { e.preventDefault(); if (lenis) { lenis.scrollTo('#contact'); } else { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); } }}
-              className="cursor-pointer flex-1 px-5 py-3.5 bg-[#FF6B35] rounded-xl text-white font-sans font-semibold text-sm sm:text-base shadow-lg shadow-[#FF6B35]/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 text-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="cursor-pointer flex-1 min-h-[44px] px-5 py-3.5 bg-[#FF6B35] rounded-xl text-white font-sans font-semibold text-sm sm:text-base shadow-lg shadow-[#FF6B35]/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 text-center flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               {t.primaryCta}
             </a>
             <a
               href="#portfolio"
               onClick={(e) => { e.preventDefault(); if (lenis) { lenis.scrollTo('#portfolio'); } else { document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' }); } }}
-              className="cursor-pointer flex-1 px-5 py-3.5 border border-gray-500 rounded-xl text-gray-200 bg-transparent font-sans font-medium text-sm sm:text-base hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 transition-all duration-300 text-center focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="cursor-pointer flex-1 min-h-[44px] px-5 py-3.5 border border-gray-500 rounded-xl text-gray-200 bg-transparent font-sans font-medium text-sm sm:text-base hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 transition-all duration-300 text-center flex items-center justify-center focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               {t.secondaryCta}
             </a>

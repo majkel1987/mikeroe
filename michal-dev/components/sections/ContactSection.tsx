@@ -235,7 +235,7 @@ export default function ContactSection() {
           <h2 className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]">
             {t.title}
           </h2>
-          <p className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
+          <p className="text-gray-300 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
             {t.subtitle}
           </p>
         </div>

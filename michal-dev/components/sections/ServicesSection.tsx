@@ -152,7 +152,7 @@ export default function ServicesSection() {
 
           <p
             ref={subtitleRef}
-            className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl"
+            className="text-gray-300 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl"
           >
             {t.subtitle}
           </p>
@@ -198,7 +198,7 @@ export default function ServicesSection() {
                         <h3 className="text-white font-display text-lg sm:text-xl font-bold leading-snug">
                           {service.title[lang]}
                         </h3>
-                        <p className="text-gray-400 font-sans text-sm font-normal leading-relaxed">
+                        <p className="text-gray-300 font-sans text-sm font-normal leading-relaxed">
                           {service.description[lang]}
                         </p>
                       </div>
@@ -225,7 +225,7 @@ export default function ServicesSection() {
               <h3 className="text-white font-display text-xl sm:text-[22px] font-bold">
                 {t.ctaTitle}
               </h3>
-              <p className="text-gray-400 font-sans text-sm font-normal">
+              <p className="text-gray-300 font-sans text-sm font-normal">
                 {t.ctaSubtitle}
               </p>
             </div>

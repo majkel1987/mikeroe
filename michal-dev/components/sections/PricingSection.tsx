@@ -191,7 +191,7 @@ export default function PricingSection() {
             </h2>
 
             {/* Subtitle */}
-            <p className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
+            <p className="text-gray-300 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
               {t.subtitle}
             </p>
 
@@ -245,7 +245,7 @@ export default function PricingSection() {
                   )}
 
                   <div
-                    className={`relative w-full flex flex-col h-full p-8 rounded-2xl border transition-all duration-300 ${
+                    className={`relative w-full flex flex-col h-full p-6 sm:p-8 rounded-2xl border transition-all duration-300 overflow-hidden ${
                       isHighlighted
                         ? 'bg-[#1A1A24] border-[#FF6B35] shadow-[0_0_30px_rgba(255,107,53,0.18)] hover:-translate-y-1'
                         : 'bg-[#1A1A24] border-white/5 hover:border-white/15 hover:-translate-y-1'
@@ -268,7 +268,7 @@ export default function PricingSection() {
                       </div>
 
                       {/* Short description */}
-                      <div className="font-sans text-gray-400 text-sm leading-relaxed min-h-[3rem]">
+                      <div className="font-sans text-gray-300 text-sm leading-relaxed min-h-[3rem]">
                         {p.description[lang]}
                       </div>
 
@@ -281,8 +281,8 @@ export default function PricingSection() {
                             {typeof p.prefix === 'object' ? p.prefix[lang] : p.prefix}
                           </span>
                         )}
-                        <div className="flex items-baseline gap-2">
-                          <span className="font-display text-white text-4xl font-bold tracking-tight leading-none transition-all duration-300">
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <span className="font-display text-white text-3xl sm:text-4xl font-bold tracking-tight leading-none transition-all duration-300">
                             {calculatePrice(typeof p.price === 'object' ? p.price[lang] : p.price, isUrgent)}
                           </span>
                           {p.currency && (
