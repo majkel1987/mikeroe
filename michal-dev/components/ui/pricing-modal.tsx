@@ -87,7 +87,7 @@ export function PricingModal({ isOpen, onClose, plan }: PricingModalProps) {
               </h3>
               <button
                 onClick={onClose}
-                className="p-2 -mr-2 text-muted hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                className="p-3 -mr-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-muted hover:text-white transition-colors rounded-lg hover:bg-white/5"
                 aria-label={mt.close}
               >
                 <X className="w-5 h-5" />
