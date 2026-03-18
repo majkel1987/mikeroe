@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -11,6 +11,7 @@ import {
 import { TbBrandCSharp } from 'react-icons/tb';
 import { Database, Code2, Layers } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
+import { useTechItemLetterSpacing } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -104,6 +105,19 @@ export default function TechStackSection() {
   const headerTitleRef = useRef<HTMLHeadingElement>(null);
   const headerSublineRef = useRef<HTMLParagraphElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
+  const techHeadingsRef = useRef<HTMLElement[]>([]);
+
+  // Collect tech item heading refs
+  useEffect(() => {
+    if (categoriesRef.current) {
+      techHeadingsRef.current = Array.from(
+        categoriesRef.current.querySelectorAll('.tech-item h3')
+      ) as HTMLElement[];
+    }
+  }, []);
+
+  // Apply tech item letter spacing effect
+  useTechItemLetterSpacing(sectionRef, techHeadingsRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {

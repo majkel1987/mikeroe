@@ -10,6 +10,7 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/lib/LanguageContext';
+import { useContactImageParallax } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -121,6 +122,9 @@ export default function ContactSection() {
   const leftColRef = useRef<HTMLDivElement>(null);
   const rightColRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+
+  // Apply contact image parallax velocity effect
+  useContactImageParallax(sectionRef, leftColRef);
 
   const {
     register,

@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useEffect } from 'react';
 import { Search, PenTool, Code, Gauge, Rocket } from 'lucide-react';
 import servicesData from '@/content/services.json';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/lib/LanguageContext';
+import { useLenis, useServicesTimelineShift } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,12 +58,26 @@ export default function ServicesSection() {
   const services: ServicePhase[] = servicesData;
   const { lang } = useLanguage();
   const t = TRANSLATIONS[lang];
+  const { lenis } = useLenis();
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const ctaStripRef = useRef<HTMLDivElement>(null);
+  const phaseCardsRef = useRef<HTMLElement[]>([]);
+
+  // Collect phase card refs
+  useEffect(() => {
+    if (timelineContainerRef.current) {
+      phaseCardsRef.current = Array.from(
+        timelineContainerRef.current.querySelectorAll('.phase-card')
+      ) as HTMLElement[];
+    }
+  }, []);
+
+  // Apply services timeline horizontal shift effect
+  useServicesTimelineShift(phaseCardsRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -218,7 +233,7 @@ export default function ServicesSection() {
               href="#contact"
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                if (lenis) { lenis.scrollTo('#contact'); } else { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }
               }}
               className="shrink-0 cursor-pointer bg-[#FF6B35] hover:bg-[#E63946] transition-colors duration-250 text-white font-sans text-sm sm:text-base font-medium px-7 py-3 rounded-xl whitespace-nowrap text-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >

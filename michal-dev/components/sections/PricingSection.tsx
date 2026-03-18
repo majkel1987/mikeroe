@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useLayoutEffect, useState } from 'react';
+import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import pricingData from '@/content/pricing.json';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PricingModal, PricingTierDetails } from '@/components/ui/pricing-modal';
 import { useLanguage } from '@/lib/LanguageContext';
+import { useLenis, usePricingCardTilt } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,12 +58,26 @@ export default function PricingSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const pricingCardsRef = useRef<HTMLElement[]>([]);
+  const { lenis } = useLenis();
 
   const [selectedPlan, setSelectedPlan] = useState<PricingTierDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUrgent, setIsUrgent] = useState(false);
   const { lang } = useLanguage();
   const t = TRANSLATIONS[lang];
+
+  // Collect pricing card refs
+  useEffect(() => {
+    if (gridRef.current) {
+      pricingCardsRef.current = Array.from(
+        gridRef.current.querySelectorAll('.pricing-card')
+      ) as HTMLElement[];
+    }
+  }, []);
+
+  // Apply pricing card tilt effect
+  usePricingCardTilt(gridRef, pricingCardsRef);
 
   const calculatePrice = (basePrice: string, urgent: boolean) => {
     if (!urgent) return basePrice;
@@ -92,7 +107,7 @@ export default function PricingSection() {
 
   const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    if (lenis) { lenis.scrollTo('#contact'); } else { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }
   };
 
   const handleOpenModal = (plan: PricingTier) => {

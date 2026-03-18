@@ -2,6 +2,7 @@
 
 import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import gsap from 'gsap';
+import { useHeroOrbitStretch } from '@/components/SmoothScroll';
 
 // react-icons imports
 import {
@@ -87,6 +88,9 @@ export default function TechOrbit() {
   useEffect(() => {
     setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, []);
+
+  // Apply hero orbit stretch effect
+  useHeroOrbitStretch(containerRef);
 
   // Entrance animation with GSAP
   useLayoutEffect(() => {

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence, useSpring } from 'framer-motion';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
+import { useLenis, useNavFadeOnVelocity } from '@/components/SmoothScroll';
 
 interface NavLink {
   name: string;
@@ -22,6 +23,8 @@ const navLinks: NavLink[] = [
 export default function Navbar() {
   const { scrollY, scrollYProgress } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
+  const { lenis } = useLenis();
+  const headerRef = useRef<HTMLElement>(null);
 
   // Smooth spring animation for progress bar
   const scaleX = useSpring(scrollYProgress, {
@@ -32,6 +35,9 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('Usługi');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { lang, toggleLang } = useLanguage();
+
+  // Apply nav fade on velocity effect
+  useNavFadeOnVelocity(headerRef, isScrolled);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -64,17 +70,25 @@ export default function Navbar() {
   }, [activeSection]);
 
   const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    if (lenis) {
+      lenis.scrollTo('#contact');
+    } else {
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    }
     setIsMobileMenuOpen(false);
   };
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const element = document.getElementById(href.substring(1));
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
+    if (lenis) {
+      lenis.scrollTo(href);
+    } else {
+      const element = document.getElementById(href.substring(1));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
+    setIsMobileMenuOpen(false);
   };
 
   /* ── Language pill ── */
@@ -127,6 +141,7 @@ export default function Navbar() {
       />
 
       <motion.header
+        ref={headerRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
           isScrolled
             ? 'bg-bg/85 backdrop-blur-[16px] border-b border-border/50'
@@ -139,7 +154,7 @@ export default function Navbar() {
         <div className="max-w-[1440px] mx-auto w-full px-6 md:px-12 h-16 flex items-center justify-between">
           
           {/* Logo */}
-          <Link href="/" className="flex items-center" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <Link href="/" className="flex items-center" onClick={() => { if (lenis) { lenis.scrollTo(0); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); } }}>
             <span className="font-display font-bold text-lg text-text">mikeroe</span>
             <span className="font-display font-bold text-lg text-[#FF6B35]">.pl</span>
           </Link>

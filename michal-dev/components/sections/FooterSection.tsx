@@ -4,6 +4,7 @@ import { useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/lib/LanguageContext';
+import { useLenis, useFooterSocialIconsSpread } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -157,9 +158,14 @@ export default function FooterSection() {
   const currentYear = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const socialIconsRef = useRef<HTMLDivElement>(null);
   const { lang } = useLanguage();
   const t = TRANSLATIONS[lang];
   const navLinks = lang === 'en' ? navLinksEN : navLinksPL;
+  const { lenis } = useLenis();
+
+  // Apply footer social icons spread effect
+  useFooterSocialIconsSpread(footerRef, socialIconsRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -211,7 +217,7 @@ export default function FooterSection() {
             </div>
 
             {/* Social icons */}
-            <div className="flex items-center gap-2 mt-1">
+            <div ref={socialIconsRef} className="flex items-center gap-2 mt-1">
               {socialLinks.map(({ labelPL, labelEN, href, Icon }) => (
                 <a
                   key={labelPL}
@@ -310,7 +316,7 @@ export default function FooterSection() {
 
           <a
             href="#main"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            onClick={(e) => { e.preventDefault(); if (lenis) { lenis.scrollTo(0); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
             className="font-mono text-[11px] text-muted hover:text-text transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 rounded px-2 py-1 cursor-pointer"
           >
             {t.backToTop}

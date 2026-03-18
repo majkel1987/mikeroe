@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useEffect } from 'react';
 import Image from 'next/image';
 import projectsData from '@/content/projects.json';
 import gsap from 'gsap';
 import { ExternalLink } from 'lucide-react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/lib/LanguageContext';
+import { usePortfolioCardSkew } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,6 +55,19 @@ export default function PortfolioSection() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const projectCardsRef = useRef<HTMLElement[]>([]);
+
+  // Collect project card refs
+  useEffect(() => {
+    if (gridRef.current) {
+      projectCardsRef.current = Array.from(
+        gridRef.current.querySelectorAll('.project-card')
+      ) as HTMLElement[];
+    }
+  }, []);
+
+  // Apply portfolio card skew effect
+  usePortfolioCardSkew(projectCardsRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
