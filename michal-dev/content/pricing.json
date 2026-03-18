@@ -1,100 +1,228 @@
 [
   {
     "id": "1",
-    "tier": "Starter",
-    "description": "Nowoczesna jednostronicowa wizytówka, która konwertuje ruch na klientów.",
+    "tier": {
+      "pl": "Starter",
+      "en": "Starter"
+    },
+    "description": {
+      "pl": "Nowoczesna jednostronicowa wizytówka, która konwertuje ruch na klientów.",
+      "en": "A modern single-page business card that converts visitors into clients."
+    },
     "price": "2000-2500",
     "currency": "PLN netto",
-    "prefix": "od",
+    "prefix": {
+      "pl": "od",
+      "en": "from"
+    },
     "suffix": "",
-    "timeframe": "2–4 tygodni",
-    "ctaText": "Wybieram Starter",
-    "features": [
-      "1-sekcyjny landing page",
-      "Responsive design (1 iteracja zmian)",
-      "SEO on-page"
-    ],
-    "specsIncluded": [
-      "1-sekcyjny landing page",
-      "Responsive design (1 iteracja zmian)",
-      "Podstawowa optymalizacja SEO on-page",
-      "Deployment na Vercel w cenie",
-      "Pomoc w konfiguracji istniejącej domeny klienta"
-    ],
-    "specsExcluded": [
-      "Zakup/konfiguracja domeny od zera",
-      "Edycja zdjęć/grafik",
-      "Custom design (używam gotowych z Figma/Tailwind)",
-      "Dedykowany backend i baza danych",
-      "Panel administracyjny"
-    ],
+    "timeframe": {
+      "pl": "2–4 tygodni",
+      "en": "2–4 weeks"
+    },
+    "ctaText": {
+      "pl": "Wybieram Starter",
+      "en": "Choose Starter"
+    },
+    "features": {
+      "pl": [
+        "1-sekcyjny landing page",
+        "Responsive design (1 iteracja zmian)",
+        "SEO on-page"
+      ],
+      "en": [
+        "1-section landing page",
+        "Responsive design (1 revision round)",
+        "On-page SEO"
+      ]
+    },
+    "specsIncluded": {
+      "pl": [
+        "1-sekcyjny landing page",
+        "Responsive design (1 iteracja zmian)",
+        "Podstawowa optymalizacja SEO on-page",
+        "Deployment na Vercel w cenie",
+        "Pomoc w konfiguracji istniejącej domeny klienta"
+      ],
+      "en": [
+        "1-section landing page",
+        "Responsive design (1 revision round)",
+        "Basic on-page SEO optimisation",
+        "Vercel deployment included",
+        "Help configuring an existing client domain"
+      ]
+    },
+    "specsExcluded": {
+      "pl": [
+        "Zakup/konfiguracja domeny od zera",
+        "Edycja zdjęć/grafik",
+        "Custom design (używam gotowych z Figma/Tailwind)",
+        "Dedykowany backend i baza danych",
+        "Panel administracyjny"
+      ],
+      "en": [
+        "Domain purchase/setup from scratch",
+        "Photo/graphic editing",
+        "Custom design (I use ready-made Figma/Tailwind templates)",
+        "Dedicated backend and database",
+        "Admin panel"
+      ]
+    },
     "highlighted": false
   },
   {
     "id": "2",
-    "tier": "Web App MVP",
-    "description": "Działający produkt cyfrowy, gotowy na przyjęcie pierwszych realnych użytkowników.",
+    "tier": {
+      "pl": "Web App MVP",
+      "en": "Web App MVP"
+    },
+    "description": {
+      "pl": "Działający produkt cyfrowy, gotowy na przyjęcie pierwszych realnych użytkowników.",
+      "en": "A working digital product, ready to onboard its first real users."
+    },
     "price": "6000-9000",
     "currency": "PLN netto",
-    "prefix": "od",
+    "prefix": {
+      "pl": "od",
+      "en": "from"
+    },
     "suffix": "",
-    "timeframe": "4–10 tygodni",
-    "ctaText": "Wybieram Web App",
-    "features": [
-      "Core React + ASP.NET Core",
-      "Do 3 integracji API",
-      "Autentykacja",
-      "Podstawowy frontend admin"
-    ],
-    "specsIncluded": [
-      "Dedykowany backend (C# / ASP.NET Core)",
-      "Dynamiczny frontend z logiką w React",
-      "Do 3 integracji API",
-      "Autentykacja i autoryzacja użytkowników",
-      "Podstawowy frontend admin",
-      "Deployment na Vercel w cenie",
-      "Pomoc w konfiguracji istniejącej domeny klienta"
-    ],
-    "specsExcluded": [
-      "Zakup/konfiguracja domeny od zera",
-      "Edycja zdjęć/grafik",
-      "Custom design (używam gotowych z Figma/Tailwind)",
-      "Złożone integracje z zewnętrznymi API (więcej niż 3)",
-      "Dedykowana architektura mikroserwisów"
-    ],
+    "timeframe": {
+      "pl": "4–10 tygodni",
+      "en": "4–10 weeks"
+    },
+    "ctaText": {
+      "pl": "Wybieram Web App",
+      "en": "Choose Web App"
+    },
+    "features": {
+      "pl": [
+        "Core React + ASP.NET Core",
+        "Do 3 integracji API",
+        "Autentykacja",
+        "Podstawowy frontend admin"
+      ],
+      "en": [
+        "Core React + ASP.NET Core",
+        "Up to 3 API integrations",
+        "Authentication",
+        "Basic admin frontend"
+      ]
+    },
+    "specsIncluded": {
+      "pl": [
+        "Dedykowany backend (C# / ASP.NET Core)",
+        "Dynamiczny frontend z logiką w React",
+        "Do 3 integracji API",
+        "Autentykacja i autoryzacja użytkowników",
+        "Podstawowy frontend admin",
+        "Deployment na Vercel w cenie",
+        "Pomoc w konfiguracji istniejącej domeny klienta"
+      ],
+      "en": [
+        "Dedicated backend (C# / ASP.NET Core)",
+        "Dynamic React frontend with business logic",
+        "Up to 3 API integrations",
+        "User authentication and authorisation",
+        "Basic admin frontend",
+        "Vercel deployment included",
+        "Help configuring an existing client domain"
+      ]
+    },
+    "specsExcluded": {
+      "pl": [
+        "Zakup/konfiguracja domeny od zera",
+        "Edycja zdjęć/grafik",
+        "Custom design (używam gotowych z Figma/Tailwind)",
+        "Złożone integracje z zewnętrznymi API (więcej niż 3)",
+        "Dedykowana architektura mikroserwisów"
+      ],
+      "en": [
+        "Domain purchase/setup from scratch",
+        "Photo/graphic editing",
+        "Custom design (I use ready-made Figma/Tailwind templates)",
+        "Complex external API integrations (more than 3)",
+        "Dedicated microservices architecture"
+      ]
+    },
     "highlighted": true
   },
   {
     "id": "3",
-    "tier": "Rozwój SaaS",
-    "description": "Skalowalna architektura i złożona logika biznesowa dla zaawansowanych platform.",
-    "price": "Wycena indywidualna",
+    "tier": {
+      "pl": "Rozwój SaaS",
+      "en": "SaaS Development"
+    },
+    "description": {
+      "pl": "Skalowalna architektura i złożona logika biznesowa dla zaawansowanych platform.",
+      "en": "Scalable architecture and complex business logic for advanced platforms."
+    },
+    "price": {
+      "pl": "Wycena indywidualna",
+      "en": "Custom quote"
+    },
     "currency": "",
-    "prefix": "",
+    "prefix": {
+      "pl": "",
+      "en": ""
+    },
     "suffix": "",
-    "timeframe": "Dedykowany harmonogram",
-    "ctaText": "Zapytaj o wycenę",
-    "features": [
-      "Integracje CRM/DB (do 5)",
-      "Monitoring błędów",
-      "Architektura multi-tenant",
-      "Cloud-ready (Vercel)"
-    ],
-    "specsIncluded": [
-      "Architektura multi-tenant",
-      "Integracje CRM/DB (do 5)",
-      "Zaawansowany monitoring i logowanie błędów",
-      "Cloud-ready (w tym Vercel)",
-      "Wieloetapowe planowanie i harmonogramowanie",
-      "Deployment na Vercel w cenie",
-      "Pomoc w konfiguracji istniejącej domeny klienta"
-    ],
-    "specsExcluded": [
-      "Zakup/konfiguracja domeny od zera",
-      "Edycja zdjęć/grafik",
-      "Custom design (używam gotowych z Figma/Tailwind)",
-      "Koszty zewnętrznych usług (płatności, cloud poza Vercelem)"
-    ],
+    "timeframe": {
+      "pl": "Dedykowany harmonogram",
+      "en": "Dedicated schedule"
+    },
+    "ctaText": {
+      "pl": "Zapytaj o wycenę",
+      "en": "Request a quote"
+    },
+    "features": {
+      "pl": [
+        "Integracje CRM/DB (do 5)",
+        "Monitoring błędów",
+        "Architektura multi-tenant",
+        "Cloud-ready (Vercel)"
+      ],
+      "en": [
+        "CRM/DB integrations (up to 5)",
+        "Error monitoring",
+        "Multi-tenant architecture",
+        "Cloud-ready (Vercel)"
+      ]
+    },
+    "specsIncluded": {
+      "pl": [
+        "Architektura multi-tenant",
+        "Integracje CRM/DB (do 5)",
+        "Zaawansowany monitoring i logowanie błędów",
+        "Cloud-ready (w tym Vercel)",
+        "Wieloetapowe planowanie i harmonogramowanie",
+        "Deployment na Vercel w cenie",
+        "Pomoc w konfiguracji istniejącej domeny klienta"
+      ],
+      "en": [
+        "Multi-tenant architecture",
+        "CRM/DB integrations (up to 5)",
+        "Advanced monitoring and error logging",
+        "Cloud-ready (including Vercel)",
+        "Multi-phase planning and scheduling",
+        "Vercel deployment included",
+        "Help configuring an existing client domain"
+      ]
+    },
+    "specsExcluded": {
+      "pl": [
+        "Zakup/konfiguracja domeny od zera",
+        "Edycja zdjęć/grafik",
+        "Custom design (używam gotowych z Figma/Tailwind)",
+        "Koszty zewnętrznych usług (płatności, cloud poza Vercelem)"
+      ],
+      "en": [
+        "Domain purchase/setup from scratch",
+        "Photo/graphic editing",
+        "Custom design (I use ready-made Figma/Tailwind templates)",
+        "Costs of external services (payments, cloud beyond Vercel)"
+      ]
+    },
     "highlighted": false
   }
 ]

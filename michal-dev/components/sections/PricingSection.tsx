@@ -5,22 +5,51 @@ import pricingData from '@/content/pricing.json';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PricingModal, PricingTierDetails } from '@/components/ui/pricing-modal';
+import { useLanguage } from '@/lib/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const TRANSLATIONS = {
+  pl: {
+    sectionLabel: 'CENNIK',
+    title: 'Klarowne zasady, czysty kod, zero ukrytych kosztów',
+    subtitle: 'Cenię inżynieryją precyzję i transparentność. Wybierz pakiet, który najlepiej pasuje do Twojego etapu biznesowego, lub porozmawiajmy o wycenie indywidualnej.',
+    toggleStandard: 'Standardowy',
+    toggleUrgent: 'Tryb Pilny',
+    mostPopular: 'Najpopularniejszy',
+    inPrice: 'W cenie:',
+    delivery: 'Realizacja:',
+    fullSpec: 'Zobacz pełną specyfikację',
+  },
+  en: {
+    sectionLabel: 'PRICING',
+    title: 'Clear terms, clean code, zero hidden costs',
+    subtitle: 'I value engineering precision and transparency. Pick the package that fits your business stage, or let\u2019s discuss a custom quote.',
+    toggleStandard: 'Standard',
+    toggleUrgent: 'Rush Mode',
+    mostPopular: 'Most popular',
+    inPrice: 'Included:',
+    delivery: 'Timeline:',
+    fullSpec: 'See full specification',
+  },
+} as const;
+
+type Localised = { pl: string; en: string };
+type LocalisedArr = { pl: string[]; en: string[] };
+
 interface PricingTier {
   id: string;
-  tier: string;
-  description: string;
-  price: string;
+  tier: Localised;
+  description: Localised;
+  price: string | Localised;
   currency: string;
-  prefix: string;
+  prefix: Localised;
   suffix: string;
-  timeframe: string;
-  ctaText: string;
-  features: string[];
-  specsIncluded: string[];
-  specsExcluded: string[];
+  timeframe: Localised;
+  ctaText: Localised;
+  features: LocalisedArr;
+  specsIncluded: LocalisedArr;
+  specsExcluded: LocalisedArr;
   highlighted: boolean;
 }
 
@@ -32,6 +61,8 @@ export default function PricingSection() {
   const [selectedPlan, setSelectedPlan] = useState<PricingTierDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUrgent, setIsUrgent] = useState(false);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
 
   const calculatePrice = (basePrice: string, urgent: boolean) => {
     if (!urgent) return basePrice;
@@ -65,7 +96,12 @@ export default function PricingSection() {
   };
 
   const handleOpenModal = (plan: PricingTier) => {
-    setSelectedPlan(plan);
+    setSelectedPlan({
+      id: plan.id,
+      tier: plan.tier[lang],
+      specsIncluded: plan.specsIncluded[lang],
+      specsExcluded: plan.specsExcluded[lang],
+    });
     setIsModalOpen(true);
   };
 
@@ -129,19 +165,19 @@ export default function PricingSection() {
             {/* Label + divider row */}
             <div className="flex flex-row items-center gap-4 w-full">
               <span className="text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase">
-                CENNIK
+                {t.sectionLabel}
               </span>
               <div className="h-px bg-[#FF6B35]/30 flex-1" />
             </div>
 
             {/* H2 */}
             <h2 className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]">
-              Klarowne zasady, czysty kod, zero ukrytych kosztów
+              {t.title}
             </h2>
 
             {/* Subtitle */}
             <p className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
-              Cenię inżynieryjną precyzję i transparentność. Wybierz pakiet, który najlepiej pasuje do Twojego etapu biznesowego, lub porozmawiajmy o wycenie indywidualnej.
+              {t.subtitle}
             </p>
 
             {/* Toggle pill */}
@@ -152,7 +188,7 @@ export default function PricingSection() {
                 aria-pressed={isUrgent}
               >
               <span className={`text-[15px] font-medium transition-colors ${!isUrgent ? 'text-white' : 'text-gray-500'}`}>
-                Standardowy
+                {t.toggleStandard}
               </span>
 
               {/* Switch track */}
@@ -163,7 +199,7 @@ export default function PricingSection() {
               {/* Urgent label + badge */}
               <div className="flex items-center gap-2">
                 <span className={`text-[15px] font-medium transition-colors ${isUrgent ? 'text-white' : 'text-gray-500'}`}>
-                  Tryb Pilny
+                  {t.toggleUrgent}
                 </span>
                 <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full transition-colors ${isUrgent ? 'bg-[#FF6B35] text-white' : 'text-[#FF6B35] bg-[#FF6B35]/10 border border-[#FF6B35]/20'}`}>
                   +50%
@@ -201,36 +237,38 @@ export default function PricingSection() {
                     }`}
                   >
                     {/* "Najpopularniejszy" badge */}
-                    {isHighlighted && (
-                      <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 z-10">
-                        <div className="bg-[#FF6B35] text-white text-[11px] font-semibold px-4 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(255,107,53,0.4)]">
-                          Najpopularniejszy
+                      {isHighlighted && (
+                        <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 z-10">
+                          <div className="bg-[#FF6B35] text-white text-[11px] font-semibold px-4 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(255,107,53,0.4)]">
+                            {t.mostPopular}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
                     {/* ── Card Header ── */}
                     <div className="flex flex-col gap-3">
                       {/* Title */}
                       <div className="font-display text-white text-2xl font-bold tracking-tight">
-                        {p.tier}
+                        {p.tier[lang]}
                       </div>
 
                       {/* Short description */}
                       <div className="font-sans text-gray-400 text-sm leading-relaxed min-h-[3rem]">
-                        {p.description}
+                        {p.description[lang]}
                       </div>
 
                       <div className="w-full h-px bg-white/5 my-3" />
 
                       {/* Price */}
                       <div className="flex flex-col gap-1">
-                        {p.prefix && (
-                          <span className="text-gray-400 text-sm leading-none">{p.prefix}</span>
+                        {(typeof p.prefix === 'object' ? p.prefix[lang] : p.prefix) && (
+                          <span className="text-gray-400 text-sm leading-none">
+                            {typeof p.prefix === 'object' ? p.prefix[lang] : p.prefix}
+                          </span>
                         )}
                         <div className="flex items-baseline gap-2">
                           <span className="font-display text-white text-4xl font-bold tracking-tight leading-none transition-all duration-300">
-                            {calculatePrice(p.price, isUrgent)}
+                            {calculatePrice(typeof p.price === 'object' ? p.price[lang] : p.price, isUrgent)}
                           </span>
                           {p.currency && (
                             <span className="text-gray-300 text-sm font-medium tracking-wide">
@@ -243,18 +281,18 @@ export default function PricingSection() {
                       {/* Timeframe */}
                       <div className="w-full h-px bg-white/5 mt-4" />
                       <div className="font-sans text-gray-300 text-sm font-medium mt-1 transition-all duration-300">
-                        Realizacja: {calculateTimeframe(p.timeframe, isUrgent)}
+                        {t.delivery} {calculateTimeframe(p.timeframe[lang], isUrgent)}
                       </div>
                     </div>
 
                     {/* ── Features ── */}
                     <div className="flex flex-col flex-grow mt-8">
                       <div className="font-sans font-semibold text-white text-[15px] mb-4">
-                        W cenie:
+                        {t.inPrice}
                       </div>
 
                       <ul className="flex flex-col gap-3.5">
-                        {p.features.map((feature, i) => (
+                        {p.features[lang].map((feature, i) => (
                           <li key={i} className="flex items-start gap-3">
                             <svg
                               className="w-[17px] h-[17px] text-emerald-400 flex-shrink-0 mt-0.5"
@@ -278,7 +316,7 @@ export default function PricingSection() {
                           onClick={() => handleOpenModal(p)}
                           className="text-gray-500 hover:text-gray-300 text-[13px] font-medium transition-colors underline-offset-4 hover:underline"
                         >
-                          Zobacz pełną specyfikację
+                          {t.fullSpec}
                         </button>
                       </div>
 
@@ -296,7 +334,7 @@ export default function PricingSection() {
                           {isHighlighted && (
                             <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                           )}
-                          <span className="relative z-10">{p.ctaText || 'Wybierz'}</span>
+                          <span className="relative z-10">{p.ctaText[lang]}</span>
                         </a>
                       </div>
                     </div>

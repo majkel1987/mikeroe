@@ -2,36 +2,66 @@
   {
     "id": "discovery",
     "phase": "01",
-    "title": "Discovery",
-    "description": "Analiza biznesowa, warsztaty i dobór odpowiedniej technologii.",
+    "title": {
+      "pl": "Discovery",
+      "en": "Discovery"
+    },
+    "description": {
+      "pl": "Analiza biznesowa, warsztaty i dobór odpowiedniej technologii.",
+      "en": "Business analysis, workshops, and selection of the right technology stack."
+    },
     "icon": "Search"
   },
   {
     "id": "architecture",
     "phase": "02",
-    "title": "Architektura & UI",
-    "description": "Projektowanie interfejsu (UX/UI) oraz solidnej struktury bazy danych.",
+    "title": {
+      "pl": "Architektura & UI",
+      "en": "Architecture & UI"
+    },
+    "description": {
+      "pl": "Projektowanie interfejsu (UX/UI) oraz solidnej struktury bazy danych.",
+      "en": "Designing the interface (UX/UI) and a solid database structure."
+    },
     "icon": "PenTool"
   },
   {
     "id": "development",
     "phase": "03",
-    "title": "Development",
-    "description": "Kodowanie od A do Z (niezawodny backend w C# i responsywny frontend w React).",
+    "title": {
+      "pl": "Development",
+      "en": "Development"
+    },
+    "description": {
+      "pl": "Kodowanie od A do Z (niezawodny backend w C# i responsywny frontend w React).",
+      "en": "Full-stack coding from A to Z — reliable C# backend and responsive React frontend."
+    },
     "icon": "Code"
   },
   {
     "id": "testing",
     "phase": "04",
-    "title": "Testy & Optymalizacja",
-    "description": "Szlifowanie wydajności, bezpieczeństwa i Core Web Vitals.",
+    "title": {
+      "pl": "Testy & Optymalizacja",
+      "en": "Testing & Optimisation"
+    },
+    "description": {
+      "pl": "Szlifowanie wydajności, bezpieczeństwa i Core Web Vitals.",
+      "en": "Polishing performance, security, and Core Web Vitals."
+    },
     "icon": "Gauge"
   },
   {
     "id": "launch",
     "phase": "05",
-    "title": "Launch",
-    "description": "Deploy na produkcję, konfiguracja serwerów i stały monitoring.",
+    "title": {
+      "pl": "Launch",
+      "en": "Launch"
+    },
+    "description": {
+      "pl": "Deploy na produkcję, konfiguracja serwerów i stały monitoring.",
+      "en": "Production deployment, server configuration, and ongoing monitoring."
+    },
     "icon": "Rocket"
   }
 ]

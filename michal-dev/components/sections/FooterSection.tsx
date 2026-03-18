@@ -3,6 +3,7 @@
 import { useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '@/lib/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -97,7 +98,7 @@ const jsonLd = {
 
 /* ─── Data ────────────────────────────────────────────── */
 
-const navLinks = [
+const navLinksPL = [
   { name: 'Usługi', href: '#services' },
   { name: 'Portfolio', href: '#portfolio' },
   { name: 'Stack', href: '#tech-stack' },
@@ -105,12 +106,49 @@ const navLinks = [
   { name: 'Kontakt', href: '#contact' },
 ];
 
+const navLinksEN = [
+  { name: 'Services', href: '#services' },
+  { name: 'Portfolio', href: '#portfolio' },
+  { name: 'Stack', href: '#tech-stack' },
+  { name: 'Pricing', href: '#pricing' },
+  { name: 'Contact', href: '#contact' },
+];
+
+const TRANSLATIONS = {
+  pl: {
+    navTitle: 'Nawigacja',
+    navAriaLabel: 'Nawigacja stopki',
+    statusTitle: 'Status',
+    available: 'Dostępny na nowe projekty',
+    statusText: 'Chętnie porozmawiam o Twoim projekcie.',
+    statusLink: 'Napisz do mnie →',
+    pricingNote: '* Terminy szacunkowe (praca po godzinach). Opcja przyspieszenia +50% ceny.',
+    copyright: 'Wszelkie prawa zastrzeżone.',
+    privacy: 'Polityka prywatności',
+    backToTop: '↑ Wróć na górę',
+    emailLabel: 'Wyślij email',
+  },
+  en: {
+    navTitle: 'Navigation',
+    navAriaLabel: 'Footer navigation',
+    statusTitle: 'Status',
+    available: 'Available for new projects',
+    statusText: "Happy to discuss your project.",
+    statusLink: 'Get in touch →',
+    pricingNote: '* Timelines are estimates (part-time work). Rush option available at +50%.',
+    copyright: 'All rights reserved.',
+    privacy: 'Privacy Policy',
+    backToTop: '↑ Back to top',
+    emailLabel: 'Send email',
+  },
+} as const;
+
 const socialLinks = [
-  { label: 'GitHub', href: 'https://github.com/mikeroe', Icon: GitHubIcon },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mike-roe-8598313b7/', Icon: LinkedInIcon },
-  { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61580788897042', Icon: FacebookIcon },
-  { label: 'mike_roe1987', href: 'https://discord.com', Icon: DiscordIcon },
-  { label: 'Wyślij email', href: 'mailto:theorbitospace@gmail.com?subject=Zapytanie%20o%20współpracę', Icon: GmailIcon },
+  { labelPL: 'GitHub', labelEN: 'GitHub', href: 'https://github.com/mikeroe', Icon: GitHubIcon },
+  { labelPL: 'LinkedIn', labelEN: 'LinkedIn', href: 'https://www.linkedin.com/in/mike-roe-8598313b7/', Icon: LinkedInIcon },
+  { labelPL: 'Facebook', labelEN: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61580788897042', Icon: FacebookIcon },
+  { labelPL: 'mike_roe1987', labelEN: 'mike_roe1987', href: 'https://discord.com', Icon: DiscordIcon },
+  { labelPL: 'Wyślij email', labelEN: 'Send email', href: 'mailto:theorbitospace@gmail.com?subject=Zapytanie%20o%20współpracę', Icon: GmailIcon },
 ];
 
 /* ─── Component ───────────────────────────────────────── */
@@ -119,6 +157,9 @@ export default function FooterSection() {
   const currentYear = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+  const navLinks = lang === 'en' ? navLinksEN : navLinksPL;
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -171,13 +212,13 @@ export default function FooterSection() {
 
             {/* Social icons */}
             <div className="flex items-center gap-2 mt-1">
-              {socialLinks.map(({ label, href, Icon }) => (
+              {socialLinks.map(({ labelPL, labelEN, href, Icon }) => (
                 <a
-                  key={label}
+                  key={labelPL}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={label}
+                  aria-label={lang === 'en' ? labelEN : labelPL}
                   className="flex w-10 h-10 items-center justify-center rounded-xl bg-surface border border-border text-muted hover:text-text hover:border-text/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2"
                 >
                   <Icon />
@@ -189,9 +230,9 @@ export default function FooterSection() {
           {/* Col 2 — Navigation */}
           <div className="flex flex-col gap-3">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-muted/60">
-              Nawigacja
+              {t.navTitle}
             </p>
-            <nav aria-label="Nawigacja stopki" className="flex flex-row flex-wrap gap-x-6 gap-y-2">
+            <nav aria-label={t.navAriaLabel} className="flex flex-row flex-wrap gap-x-6 gap-y-2">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
@@ -207,22 +248,22 @@ export default function FooterSection() {
           {/* Col 3 — Availability */}
           <div className="flex flex-col gap-3">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-muted/60">
-              Status
+              {t.statusTitle}
             </p>
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 flex-shrink-0 rounded-full bg-accent2 animate-pulse" />
                 <span className="font-mono text-xs text-accent2">
-                  Dostępny na nowe projekty
+                  {t.available}
                 </span>
               </div>
               <p className="font-sans text-[13px] text-muted leading-relaxed">
-                Chętnie porozmawiam o Twoim projekcie.{' '}
+                {t.statusText}{' '}
                 <a
                   href="#contact"
                   className="text-[#FF6B35] hover:underline transition-colors duration-200 cursor-pointer"
                 >
-                  Napisz do mnie →
+                  {t.statusLink}
                 </a>
               </p>
             </div>
@@ -233,7 +274,7 @@ export default function FooterSection() {
         {/* ── Pricing Note ── */}
         <div className="w-full text-center pb-8 mt-4 md:mt-0">
           <p className="font-mono text-[11px] text-muted/80">
-            * Terminy szacunkowe (praca po godzinach). Opcja przyspieszenia +50% ceny.
+            {t.pricingNote}
           </p>
         </div>
 
@@ -243,7 +284,7 @@ export default function FooterSection() {
         {/* ── Bottom bar: copyright + legal + back-to-top ── */}
         <div className="py-5 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
           <span className="font-mono text-[11px] text-[#4a4a6a]">
-            © {currentYear} mikeroe.pl Wszelkie prawa zastrzeżone.
+            © {currentYear} mikeroe.pl {t.copyright}
           </span>
 
           {/* Legal links */}
@@ -252,7 +293,7 @@ export default function FooterSection() {
               href="/polityka-prywatnosci"
               className="font-mono text-[11px] text-[#4a4a6a] hover:text-muted transition-colors duration-200 cursor-pointer"
             >
-              Polityka prywatności
+              {t.privacy}
             </a>
             <span className="text-[#4a4a6a] text-[11px]">·</span>
             <a
@@ -272,7 +313,7 @@ export default function FooterSection() {
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             className="font-mono text-[11px] text-muted hover:text-text transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 rounded px-2 py-1 cursor-pointer"
           >
-            ↑ Wróć na górę
+            {t.backToTop}
           </a>
         </div>
 

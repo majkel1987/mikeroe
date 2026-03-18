@@ -6,14 +6,35 @@ import projectsData from '@/content/projects.json';
 import gsap from 'gsap';
 import { ExternalLink } from 'lucide-react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '@/lib/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const TRANSLATIONS = {
+  pl: {
+    sectionLabel: 'PORTFOLIO',
+    title: 'Projekty, które rozwiązują realne problemy',
+    subtitle: 'Zajrzyj za kulisy moich prac. Zobacz, jak wyzwania biznesowe moich klientów przekształciły się w dochodowe rozwiązania cyfrowe.',
+    inProgress: 'W budowie',
+    pageUnderConstruction: 'Strona w budowie',
+    visitSite: 'Odwiedź stronę',
+  },
+  en: {
+    sectionLabel: 'PORTFOLIO',
+    title: 'Projects that solve real problems',
+    subtitle: 'Take a look behind the scenes. See how my clients\u2019 business challenges became profitable digital solutions.',
+    inProgress: 'In progress',
+    pageUnderConstruction: 'Site under construction',
+    visitSite: 'Visit site',
+  },
+} as const;
 
 interface Project {
   id: string;
   name: string;
   role: string;
-  description: string;
+  description_pl: string;
+  description_en: string;
   stack: string[];
   status: string;
   github: string;
@@ -24,6 +45,8 @@ interface Project {
 const projects = projectsData as Project[];
 
 export default function PortfolioSection() {
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
@@ -100,15 +123,15 @@ export default function PortfolioSection() {
         <div ref={headerRef} className="flex flex-col gap-5 w-full">
           <div className="flex flex-row items-center gap-4">
             <span ref={labelRef} className="text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase">
-              PORTFOLIO
+              {t.sectionLabel}
             </span>
             <div ref={dividerRef} className="h-px bg-[#FF6B35]/30 flex-1"></div>
           </div>
           <h2 ref={titleRef} className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]">
-            Projekty, które rozwiązują realne problemy
+            {t.title}
           </h2>
           <p className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
-            Zajrzyj za kulisy moich prac. Zobacz, jak wyzwania biznesowe moich klientów przekształciły się w dochodowe rozwiązania cyfrowe.
+            {t.subtitle}
           </p>
         </div>
 
@@ -140,7 +163,7 @@ export default function PortfolioSection() {
                         {project.status === "in_progress" ? (
                           <div className="bg-white/5 backdrop-blur-md border border-amber-500/30 text-amber-400/90 text-[10px] lg:text-xs font-semibold tracking-wider px-3 lg:px-4 py-1.5 lg:py-2 rounded-full shadow-lg flex items-center gap-2 transition duration-500 hover:bg-white/10">
                             <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_12px_rgba(245,158,11,0.9)]"></div>
-                            W budowie
+                            {t.inProgress}
                           </div>
                         ) : (
                           <div className="bg-white/5 backdrop-blur-md border border-white/10 text-white/90 text-[10px] lg:text-xs font-semibold tracking-wider px-3 lg:px-4 py-1.5 lg:py-2 rounded-full shadow-lg flex items-center gap-2 transition duration-500 hover:bg-white/10 group-hover/inner:border-white/20 group-hover/inner:text-white">
@@ -209,16 +232,16 @@ export default function PortfolioSection() {
 
                     {/* Project Description */}
                     <div className="w-full mb-6 shrink-0">
-                      <p className="text-[#A1A1AA] font-sans text-[15px] lg:text-[17px] font-normal leading-relaxed max-w-[95%]">
-                        {project.description}
-                      </p>
+                        <p className="text-[#A1A1AA] font-sans text-[15px] lg:text-[17px] font-normal leading-relaxed max-w-[95%]">
+                          {lang === 'pl' ? project.description_pl : project.description_en}
+                        </p>
                     </div>
 
                     {/* Odwiedź stronę button */}
                     <div className="mt-auto pt-2">
                        {project.status === "in_progress" ? (
                           <div className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-white/5 text-white/40 font-sans font-semibold text-[15px] border border-white/10 cursor-not-allowed w-fit">
-                             Strona w budowie
+                             {t.pageUnderConstruction}
                           </div>
                        ) : (
                           <a
@@ -227,7 +250,7 @@ export default function PortfolioSection() {
                              rel="noopener noreferrer"
                              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#FF6B35] text-white font-sans font-semibold text-[15px] shadow-lg shadow-[#FF6B35]/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 w-fit group/btn focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1c23]"
                           >
-                             Odwiedź stronę
+                             {t.visitSite}
                              <ExternalLink className="w-4 h-4 transition-transform group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" />
                           </a>
                        )}

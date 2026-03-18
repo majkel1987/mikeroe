@@ -1,6 +1,22 @@
 import { useEffect, useRef } from 'react';
 import { X, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/lib/LanguageContext';
+
+const MODAL_TRANSLATIONS = {
+  pl: {
+    specTitle: 'Specyfikacja planu:',
+    close: 'Zamknij',
+    included: 'Co obejmuje',
+    excluded: 'Co nie obejmuje',
+  },
+  en: {
+    specTitle: 'Plan specification:',
+    close: 'Close',
+    included: 'What\'s included',
+    excluded: 'What\'s not included',
+  },
+} as const;
 
 export interface PricingTierDetails {
   id: string;
@@ -17,6 +33,8 @@ interface PricingModalProps {
 
 export function PricingModal({ isOpen, onClose, plan }: PricingModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const { lang } = useLanguage();
+  const mt = MODAL_TRANSLATIONS[lang];
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -65,12 +83,12 @@ export function PricingModal({ isOpen, onClose, plan }: PricingModalProps) {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/5">
               <h3 className="font-display text-2xl font-bold text-white">
-                Specyfikacja planu: {plan.tier}
+                {mt.specTitle} {plan.tier}
               </h3>
               <button
                 onClick={onClose}
                 className="p-2 -mr-2 text-muted hover:text-white transition-colors rounded-lg hover:bg-white/5"
-                aria-label="Zamknij"
+                aria-label={mt.close}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -82,7 +100,7 @@ export function PricingModal({ isOpen, onClose, plan }: PricingModalProps) {
               {plan.specsIncluded && plan.specsIncluded.length > 0 && (
                 <div className="flex flex-col gap-4">
                   <div className="font-sans font-bold text-base text-white">
-                    Co obejmuje ({plan.specsIncluded.length}):
+                    {mt.included} ({plan.specsIncluded.length}):
                   </div>
                   <ul className="flex flex-col gap-3">
                     {plan.specsIncluded.map((feature, idx) => (
@@ -103,7 +121,7 @@ export function PricingModal({ isOpen, onClose, plan }: PricingModalProps) {
               {plan.specsExcluded && plan.specsExcluded.length > 0 && (
                 <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
                   <div className="font-sans font-bold text-base text-white">
-                    Co nie obejmuje:
+                    {mt.excluded}:
                   </div>
                   <ul className="flex flex-col gap-3 opacity-60">
                     {plan.specsExcluded.map((feature, idx) => (

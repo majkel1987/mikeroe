@@ -5,14 +5,34 @@ import { Search, PenTool, Code, Gauge, Rocket } from 'lucide-react';
 import servicesData from '@/content/services.json';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '@/lib/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const TRANSLATIONS = {
+  pl: {
+    sectionLabel: 'USŁUGI & PROCES',
+    title: 'Twoja strona to nie wizytówka\u00a0\u2014 to narzędzie napędzające biznes.',
+    subtitle: 'Od pomysłu do wdrożenia\u00a0\u2014 każdy etap projektuję tak, aby Twój produkt działał bezbłędnie i przynosił realne zyski.',
+    ctaTitle: 'Masz pomysł na projekt?',
+    ctaSubtitle: 'Porozmawiajmy o tym, jak zamienić go w skalowalną aplikację.',
+    ctaButton: 'Porozmawiajmy',
+  },
+  en: {
+    sectionLabel: 'SERVICES & PROCESS',
+    title: 'Your website is not a business card\u00a0\u2014 it\u2019s a tool that drives growth.',
+    subtitle: 'From idea to deployment\u00a0\u2014 I design every phase so your product runs flawlessly and generates real results.',
+    ctaTitle: 'Got a project idea?',
+    ctaSubtitle: "Let's talk about turning it into a scalable application.",
+    ctaButton: "Let's talk",
+  },
+} as const;
 
 interface ServicePhase {
   id: string;
   phase: string;
-  title: string;
-  description: string;
+  title: { pl: string; en: string };
+  description: { pl: string; en: string };
   icon: string;
 }
 
@@ -35,6 +55,8 @@ const phaseAccents = [
 
 export default function ServicesSection() {
   const services: ServicePhase[] = servicesData;
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -101,7 +123,7 @@ export default function ServicesSection() {
           {/* Pre-title */}
           <div className="flex flex-row items-center gap-4">
             <span className="services-label text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase">
-              USŁUGI &amp; PROCES
+              {t.sectionLabel}
             </span>
             <div className="services-divider h-px bg-[#FF6B35]/30 flex-1" />
           </div>
@@ -110,15 +132,14 @@ export default function ServicesSection() {
             ref={titleRef}
             className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]"
           >
-            Twoja strona to nie wizytówka&nbsp;&mdash; to narzędzie napędzające biznes.
+            {t.title}
           </h2>
 
           <p
             ref={subtitleRef}
             className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl"
           >
-            Od pomysłu do wdrożenia&nbsp;&mdash; każdy etap projektuję tak, aby Twój produkt działał bezbłędnie
-            i przynosił realne zyski.
+            {t.subtitle}
           </p>
         </div>
 
@@ -160,10 +181,10 @@ export default function ServicesSection() {
                       {/* Left: title + description */}
                       <div className="flex flex-col gap-1.5">
                         <h3 className="text-white font-display text-lg sm:text-xl font-bold leading-snug">
-                          {service.title}
+                          {service.title[lang]}
                         </h3>
                         <p className="text-gray-400 font-sans text-sm font-normal leading-relaxed">
-                          {service.description}
+                          {service.description[lang]}
                         </p>
                       </div>
                       {/* Right: phase badge */}
@@ -187,10 +208,10 @@ export default function ServicesSection() {
           >
             <div className="flex flex-col gap-1">
               <h3 className="text-white font-display text-xl sm:text-[22px] font-bold">
-                Masz pomysł na projekt?
+                {t.ctaTitle}
               </h3>
               <p className="text-gray-400 font-sans text-sm font-normal">
-                Porozmawiajmy o tym, jak zamienić go w skalowalną aplikację.
+                {t.ctaSubtitle}
               </p>
             </div>
             <a
@@ -201,7 +222,7 @@ export default function ServicesSection() {
               }}
               className="shrink-0 cursor-pointer bg-[#FF6B35] hover:bg-[#E63946] transition-colors duration-250 text-white font-sans text-sm sm:text-base font-medium px-7 py-3 rounded-xl whitespace-nowrap text-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
-              Porozmawiajmy
+              {t.ctaButton}
             </a>
           </div>
 

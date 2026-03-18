@@ -10,79 +10,94 @@ import {
 } from 'react-icons/si';
 import { TbBrandCSharp } from 'react-icons/tb';
 import { Database, Code2, Layers } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const techCategories = [
-  {
-    name: 'FRONTEND',
-    accentClass: 'bg-[#E63946]',
-    hoverBorder: 'hover:border-[#E63946]/40',
-    hoverIconColor: 'group-hover:text-[#E63946]',
-    items: [
+const TRANSLATIONS = {
+  pl: {
+    label: 'TECH STACK',
+    ariaLabel: 'Tech Stack — narzędzia i technologie',
+    title: 'Narzędzia, które znam na\u00a0wylot',
+    subtitle: 'Inżynieryjne podejście wymaga solidnych fundamentów. Oto stack, z którym dowożę projekty do\u00a0mety.',
+    categories: [
       {
-        name: 'React',
-        description:
-          'Interfejsy, które reagują natychmiast. Czysty kod, komponenty i widoki gotowe na skalowanie.',
-        icon: SiReact,
+        name: 'FRONTEND',
+        accentClass: 'bg-[#E63946]',
+        hoverBorder: 'hover:border-[#E63946]/40',
+        hoverIconColor: 'group-hover:text-[#E63946]',
+        items: [
+          { name: 'React', description: 'Interfejsy, które reagują natychmiast. Czysty kod, komponenty i widoki gotowe na skalowanie.', icon: SiReact },
+          { name: 'HTML & CSS', description: 'Konstrukcja i aerodynamika. Każdy element interfejsu zaprogramowany z dbałością o detale i pełną responsywność.', icon: Code2 },
+        ],
       },
       {
-        name: 'HTML & CSS',
-        description:
-          'Konstrukcja i aerodynamika. Każdy element interfejsu zaprogramowany z dbałością o detale i pełną responsywność.',
-        icon: Code2,
-      },
-    ],
-  },
-  {
-    name: 'BACKEND',
-    accentClass: 'bg-[#FF6B35]',
-    hoverBorder: 'hover:border-[#FF6B35]/40',
-    hoverIconColor: 'group-hover:text-[#FF6B35]',
-    items: [
-      {
-        name: 'C# / .NET',
-        description:
-          'Silnie typowany fundament. Inżynieryjna precyzja, która gwarantuje żelazną stabilność o każdej porze.',
-        icon: TbBrandCSharp,
+        name: 'BACKEND',
+        accentClass: 'bg-[#FF6B35]',
+        hoverBorder: 'hover:border-[#FF6B35]/40',
+        hoverIconColor: 'group-hover:text-[#FF6B35]',
+        items: [
+          { name: 'C# / .NET', description: 'Silnie typowany fundament. Inżynieryjna precyzja, która gwarantuje żelazną stabilność o każdej porze.', icon: TbBrandCSharp },
+          { name: 'ASP.NET Core', description: 'Potężny, enterprise-grade silnik. Gotowy na skomplikowaną logikę biznesową Twojego produktu i niezawodne API.', icon: SiDotnet },
+          { name: 'Entity Framework Core', description: 'Ulubiony ORM. Zapytania do bazy danych, które mają sens i działają bez zarzutu. Migracje bez stresu.', icon: Database },
+        ],
       },
       {
-        name: 'ASP.NET Core',
-        description:
-          'Potężny, enterprise-grade silnik. Gotowy na skomplikowaną logikę biznesową Twojego produktu i niezawodne API.',
-        icon: SiDotnet,
-      },
-      {
-        name: 'Entity Framework Core',
-        description:
-          'Ulubiony ORM. Zapytania do bazy danych, które mają sens i działają bez zarzutu. Migracje bez stresu.',
-        icon: Database,
+        name: 'TOOLING',
+        accentClass: 'bg-[#FF6B35]',
+        hoverBorder: 'hover:border-[#FF6B35]/40',
+        hoverIconColor: 'group-hover:text-[#FF6B35]',
+        items: [
+          { name: 'Git & GitHub', description: 'Kontrola wersji pod pełną kontrolą i wdrożenia szybkie jak precyzyjny pit-stop. Zero zaskoczeń na produkcji.', icon: SiGithub },
+          { name: 'Architektura SaaS', description: 'Projektowanie systemów gotowych na wielu użytkowników. Rozwiązania, które z powodzeniem działają w bojowych warunkach.', icon: Layers },
+        ],
       },
     ],
   },
-  {
-    name: 'TOOLING',
-    accentClass: 'bg-[#FF6B35]',
-    hoverBorder: 'hover:border-[#FF6B35]/40',
-    hoverIconColor: 'group-hover:text-[#FF6B35]',
-    items: [
+  en: {
+    label: 'TECH STACK',
+    ariaLabel: 'Tech Stack — tools and technologies',
+    title: 'Tools I know\u00a0inside out',
+    subtitle: 'An engineering mindset demands solid foundations. Here\'s the stack I use to ship projects across the\u00a0finish line.',
+    categories: [
       {
-        name: 'Git & GitHub',
-        description:
-          'Kontrola wersji pod pełną kontrolą i wdrożenia szybkie jak precyzyjny pit-stop. Zero zaskoczeń na produkcji.',
-        icon: SiGithub,
+        name: 'FRONTEND',
+        accentClass: 'bg-[#E63946]',
+        hoverBorder: 'hover:border-[#E63946]/40',
+        hoverIconColor: 'group-hover:text-[#E63946]',
+        items: [
+          { name: 'React', description: 'Interfaces that respond instantly. Clean code, reusable components, and views ready to scale.', icon: SiReact },
+          { name: 'HTML & CSS', description: 'Structure and styling. Every UI element crafted with attention to detail and full responsiveness.', icon: Code2 },
+        ],
       },
       {
-        name: 'Architektura SaaS',
-        description:
-          'Projektowanie systemów gotowych na wielu użytkowników. Rozwiązania, które z powodzeniem działają w bojowych warunkach.',
-        icon: Layers,
+        name: 'BACKEND',
+        accentClass: 'bg-[#FF6B35]',
+        hoverBorder: 'hover:border-[#FF6B35]/40',
+        hoverIconColor: 'group-hover:text-[#FF6B35]',
+        items: [
+          { name: 'C# / .NET', description: 'A strongly-typed foundation. Engineering precision that guarantees rock-solid stability around the clock.', icon: TbBrandCSharp },
+          { name: 'ASP.NET Core', description: 'A powerful, enterprise-grade engine. Ready for complex business logic and reliable APIs.', icon: SiDotnet },
+          { name: 'Entity Framework Core', description: 'My go-to ORM. Queries that make sense and work flawlessly. Stress-free migrations.', icon: Database },
+        ],
+      },
+      {
+        name: 'TOOLING',
+        accentClass: 'bg-[#FF6B35]',
+        hoverBorder: 'hover:border-[#FF6B35]/40',
+        hoverIconColor: 'group-hover:text-[#FF6B35]',
+        items: [
+          { name: 'Git & GitHub', description: 'Full version control and deployments as smooth as a precision pit-stop. Zero surprises in production.', icon: SiGithub },
+          { name: 'SaaS Architecture', description: 'Designing systems built for multiple users from the ground up. Solutions that thrive in real-world conditions.', icon: Layers },
+        ],
       },
     ],
   },
-];
+} as const;
 
 export default function TechStackSection() {
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const headerLabelRef = useRef<HTMLSpanElement>(null);
   const headerDividerRef = useRef<HTMLDivElement>(null);
@@ -138,7 +153,7 @@ export default function TechStackSection() {
       ref={sectionRef}
       id="tech-stack"
       className="w-full pt-12 md:pt-24 pb-12 md:pb-24 px-4 sm:px-8 xl:px-16 2xl:px-24"
-      aria-label="Tech Stack — narzędzia i technologie"
+      aria-label={t.ariaLabel}
     >
       <div className="w-full max-w-[1800px] mx-auto flex flex-col gap-12 md:gap-16 relative z-10">
 
@@ -149,22 +164,21 @@ export default function TechStackSection() {
               ref={headerLabelRef}
               className="text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase"
             >
-              TECH STACK
+              {t.label}
             </span>
             <div ref={headerDividerRef} className="h-px bg-[#FF6B35]/30 flex-1" />
           </div>
           <h2 ref={headerTitleRef} className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]">
-            Narzędzia, które znam na&nbsp;wylot
+            {t.title}
           </h2>
           <p ref={headerSublineRef} className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
-            Inżynieryjne podejście wymaga solidnych fundamentów. Oto stack, z którym dowożę projekty
-            do&nbsp;mety.
+            {t.subtitle}
           </p>
         </div>
 
         {/* ── Categories ── */}
         <div ref={categoriesRef} className="flex flex-col gap-14">
-          {techCategories.map((category, i) => (
+          {t.categories.map((category, i) => (
             <div key={category.name} className={`category-block flex flex-col gap-6 ${i > 0 ? 'mt-2' : ''}`}>
 
               {/* Category header row */}

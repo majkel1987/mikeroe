@@ -9,10 +9,11 @@ import { Send, Loader2, CheckCircle2, AlertCircle, ChevronDown } from 'lucide-re
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '@/lib/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SUBJECT_OPTIONS = [
+const SUBJECT_OPTIONS_PL = [
   'Landing Page / Strona wizytówka',
   'Sklep internetowy (e-commerce)',
   'Aplikacja webowa / SaaS',
@@ -21,16 +22,73 @@ const SUBJECT_OPTIONS = [
   'Inne',
 ];
 
-const formSchema = z.object({
-  name: z.string().min(2, 'Imię musi mieć co najmniej 2 znaki'),
-  email: z.string().email('Niepoprawny adres email'),
-  company: z.string().optional(),
-  subject: z.string().min(1, 'Wybierz temat wiadomości'),
-  message: z.string().min(10, 'Wiadomość musi mieć co najmniej 10 znaków').max(2000, 'Maksymalnie 2000 znaków'),
-  website: z.string().optional(), // honeypot
-});
+const SUBJECT_OPTIONS_EN = [
+  'Landing Page / Business Card Site',
+  'Online store (e-commerce)',
+  'Web application / SaaS',
+  'Redesign of existing site',
+  'Long-term cooperation',
+  'Other',
+];
 
-type FormData = z.infer<typeof formSchema>;
+const TRANSLATIONS = {
+  pl: {
+    sectionLabel: 'Kontakt',
+    title: 'Masz pomysł? Pogadajmy.',
+    subtitle: 'Opisz krótko swój projekt, a odezwę się w ciągu 24h.',
+    formTitle: 'Napisz wiadomość',
+    formSubtitle: 'Wypełnij formularz, a odezwę się tak szybko, jak to możliwe.',
+    labelName: 'Imię i nazwisko',
+    labelEmail: 'Adres email',
+    labelCompany: 'Firma',
+    labelSubject: 'Temat wiadomości',
+    labelMessage: 'Treść wiadomości',
+    placeholderName: 'Jan Kowalski',
+    placeholderEmail: 'jan@firma.pl',
+    placeholderCompany: 'Nazwa firmy (opcjonalnie)',
+    placeholderSubject: 'Wybierz temat...',
+    placeholderMessage: 'Opisz swój projekt, pomysł lub pytanie...',
+    imgAlt: 'Skontaktuj się ze mną',
+    sending: 'Wysyłanie...',
+    sent: 'Wysłano pomyślnie!',
+    send: 'Wyślij wiadomość',
+    rodo: 'Wysyłając formularz, wyrażasz zgodę na przetwarzanie danych osobowych w celu odpowiedzi na Twoje zapytanie.',
+    errorFallback: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.',
+    validationName: 'Imię musi mieć co najmniej 2 znaki',
+    validationEmail: 'Niepoprawny adres email',
+    validationSubject: 'Wybierz temat wiadomości',
+    validationMessageMin: 'Wiadomość musi mieć co najmniej 10 znaków',
+    validationMessageMax: 'Maksymalnie 2000 znaków',
+  },
+  en: {
+    sectionLabel: 'Contact',
+    title: "Got an idea? Let's talk.",
+    subtitle: "Briefly describe your project and I'll get back to you within 24h.",
+    formTitle: 'Send a message',
+    formSubtitle: "Fill out the form and I'll reply as soon as possible.",
+    labelName: 'Full name',
+    labelEmail: 'Email address',
+    labelCompany: 'Company',
+    labelSubject: 'Subject',
+    labelMessage: 'Message',
+    placeholderName: 'John Smith',
+    placeholderEmail: 'john@company.com',
+    placeholderCompany: 'Company name (optional)',
+    placeholderSubject: 'Select a topic...',
+    placeholderMessage: 'Describe your project, idea or question...',
+    imgAlt: 'Contact me',
+    sending: 'Sending...',
+    sent: 'Sent successfully!',
+    send: 'Send message',
+    rodo: 'By submitting this form, you consent to the processing of your personal data in order to respond to your inquiry.',
+    errorFallback: 'An unexpected error occurred. Please try again.',
+    validationName: 'Name must be at least 2 characters',
+    validationEmail: 'Invalid email address',
+    validationSubject: 'Please select a subject',
+    validationMessageMin: 'Message must be at least 10 characters',
+    validationMessageMax: 'Maximum 2000 characters',
+  },
+} as const;
 
 /* ─────────────────────────────────────────────────────── */
 
@@ -41,9 +99,23 @@ const RequiredStar = () => (
 /* ─────────────────────────────────────────────────────── */
 
 export default function ContactSection() {
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+  const SUBJECT_OPTIONS = lang === 'en' ? SUBJECT_OPTIONS_EN : SUBJECT_OPTIONS_PL;
+
+  const formSchema = z.object({
+    name: z.string().min(2, t.validationName),
+    email: z.string().email(t.validationEmail),
+    company: z.string().optional(),
+    subject: z.string().min(1, t.validationSubject),
+    message: z.string().min(10, t.validationMessageMin).max(2000, t.validationMessageMax),
+    website: z.string().optional(),
+  });
+
+  type FormData = z.infer<typeof formSchema>;
+
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [serverError, setServerError] = useState('');
-
 
   const sectionRef = useRef<HTMLElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
@@ -61,7 +133,6 @@ export default function ContactSection() {
     defaultValues: { subject: '' },
   });
 
-  // Watch message length for char counter
   const messageValue = watch('message') ?? '';
   const currentCharCount = messageValue.length;
 
@@ -79,21 +150,19 @@ export default function ContactSection() {
     if (response.success) {
       setStatus('success');
       reset();
-
       setTimeout(() => setStatus('idle'), 5000);
     } else {
       setStatus('error');
       setServerError(
         response.errors?.form ||
         Object.values(response.errors || {})[0] ||
-        'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.'
+        t.errorFallback
       );
     }
   };
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Initial hidden states
       const label = headerRef.current?.querySelector('.contact-label') as HTMLElement | null;
       const divider = headerRef.current?.querySelector('.contact-divider') as HTMLElement | null;
       const title = headerRef.current?.querySelector('h2') as HTMLElement | null;
@@ -155,15 +224,15 @@ export default function ContactSection() {
         <div ref={headerRef} className="flex flex-col gap-5 w-full">
           <div className="flex flex-row items-center gap-4 w-full">
             <span className="contact-label text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase">
-              Kontakt
+              {t.sectionLabel}
             </span>
             <div className="contact-divider h-px bg-[#FF6B35]/30 flex-1" />
           </div>
           <h2 className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]">
-            Masz pomysł? Pogadajmy.
+            {t.title}
           </h2>
           <p className="text-gray-400 font-sans text-base md:text-lg font-normal leading-relaxed max-w-2xl">
-            Opisz krótko swój projekt, a odezwę się w ciągu 24h.
+            {t.subtitle}
           </p>
         </div>
 
@@ -177,7 +246,7 @@ export default function ContactSection() {
           >
             <Image
               src="/img/Contact_image.png"
-              alt="Skontaktuj się ze mną"
+              alt={t.imgAlt}
               fill
               className="object-cover object-center"
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -201,10 +270,10 @@ export default function ContactSection() {
               {/* Form header */}
               <div className="flex flex-col gap-1.5">
                 <h3 className="font-display text-2xl font-bold text-text leading-tight">
-                  Napisz wiadomość
+                  {t.formTitle}
                 </h3>
                 <p className="font-sans text-sm text-muted leading-relaxed">
-                  Wypełnij formularz, a odezwę się tak szybko, jak to możliwe.
+                  {t.formSubtitle}
                 </p>
               </div>
 
@@ -216,14 +285,14 @@ export default function ContactSection() {
                 {/* Name */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="name" className={labelBase}>
-                    Imię i nazwisko<RequiredStar />
+                    {t.labelName}<RequiredStar />
                   </label>
                   <input
                     id="name"
                     type="text"
                     disabled={status === 'loading'}
                     autoComplete="name"
-                    placeholder="Jan Kowalski"
+                    placeholder={t.placeholderName}
                     {...register('name')}
                     className={inputBase}
                   />
@@ -235,14 +304,14 @@ export default function ContactSection() {
                 {/* Email */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="email" className={labelBase}>
-                    Adres email<RequiredStar />
+                    {t.labelEmail}<RequiredStar />
                   </label>
                   <input
                     id="email"
                     type="email"
                     disabled={status === 'loading'}
                     autoComplete="email"
-                    placeholder="jan@firma.pl"
+                    placeholder={t.placeholderEmail}
                     {...register('email')}
                     className={inputBase}
                   />
@@ -254,14 +323,14 @@ export default function ContactSection() {
                 {/* Company */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="company" className={labelBase}>
-                    Firma
+                    {t.labelCompany}
                   </label>
                   <input
                     id="company"
                     type="text"
                     disabled={status === 'loading'}
                     autoComplete="organization"
-                    placeholder="Nazwa firmy (opcjonalnie)"
+                    placeholder={t.placeholderCompany}
                     {...register('company')}
                     className={inputBase}
                   />
@@ -270,7 +339,7 @@ export default function ContactSection() {
                 {/* Subject — Select */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="subject" className={labelBase}>
-                    Temat wiadomości<RequiredStar />
+                    {t.labelSubject}<RequiredStar />
                   </label>
                   <div className="relative">
                     <select
@@ -280,7 +349,7 @@ export default function ContactSection() {
                       className={`${inputBase} appearance-none pr-10 cursor-pointer`}
                     >
                       <option value="" disabled hidden className="text-muted/40">
-                        Wybierz temat...
+                        {t.placeholderSubject}
                       </option>
                       {SUBJECT_OPTIONS.map((opt) => (
                         <option key={opt} value={opt} className="bg-surface text-text">
@@ -301,13 +370,13 @@ export default function ContactSection() {
                 {/* Message */}
                 <div className="flex flex-col gap-1.5 flex-1">
                   <label htmlFor="message" className={labelBase}>
-                    Treść wiadomości<RequiredStar />
+                    {t.labelMessage}<RequiredStar />
                   </label>
                   <div className="relative flex-1">
                     <textarea
                       id="message"
                       disabled={status === 'loading'}
-                      placeholder="Opisz swój projekt, pomysł lub pytanie..."
+                      placeholder={t.placeholderMessage}
                       {...register('message')}
                       maxLength={2000}
                       className="min-h-[140px] w-full h-full bg-[#0d0d14] border border-border rounded-xl px-4 py-3.5 text-text font-sans text-sm placeholder:text-muted/40 resize-y focus:outline-none focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35]/40 transition-colors disabled:opacity-50"
@@ -335,16 +404,16 @@ export default function ContactSection() {
                   {status === 'loading' ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      Wysyłanie...
+                      {t.sending}
                     </>
                   ) : status === 'success' ? (
                     <>
                       <CheckCircle2 className="w-5 h-5" />
-                      Wysłano pomyślnie!
+                      {t.sent}
                     </>
                   ) : (
                     <>
-                      Wyślij wiadomość
+                      {t.send}
                       <Send className="w-4 h-4" />
                     </>
                   )}
@@ -360,8 +429,7 @@ export default function ContactSection() {
 
                 {/* RODO clause */}
                 <p className="text-xs text-center text-muted/50 leading-relaxed">
-                  Wysyłając formularz, wyrażasz zgodę na przetwarzanie danych osobowych
-                  w celu odpowiedzi na Twoje zapytanie.
+                  {t.rodo}
                 </p>
               </form>
             </div>
