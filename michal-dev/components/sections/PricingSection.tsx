@@ -244,6 +244,15 @@ export default function PricingSection() {
                     <div className="absolute -inset-[1px] rounded-2xl blur-[10px] bg-[#FF6B35]/20 pointer-events-none" />
                   )}
 
+                  {/* "Najpopularniejszy" badge (outside overflow-hidden to avoid clipping) */}
+                  {isHighlighted && (
+                    <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+                      <div className="bg-[#FF6B35] text-white text-[11px] font-semibold px-4 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(255,107,53,0.4)]">
+                        {t.mostPopular}
+                      </div>
+                    </div>
+                  )}
+
                   <div
                     className={`relative w-full flex flex-col h-full p-6 sm:p-8 rounded-2xl border transition-all duration-300 overflow-hidden ${
                       isHighlighted
@@ -251,14 +260,7 @@ export default function PricingSection() {
                         : 'bg-[#1A1A24] border-white/5 hover:border-white/15 hover:-translate-y-1'
                     }`}
                   >
-                    {/* "Najpopularniejszy" badge */}
-                      {isHighlighted && (
-                        <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 z-10">
-                          <div className="bg-[#FF6B35] text-white text-[11px] font-semibold px-4 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(255,107,53,0.4)]">
-                            {t.mostPopular}
-                          </div>
-                        </div>
-                      )}
+                    {/* "Najpopularniejszy" badge moved outside overflow-hidden */}
 
                     {/* ── Card Header ── */}
                     <div className="flex flex-col gap-3">
