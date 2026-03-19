@@ -6,7 +6,8 @@ export const jsonLdSchema = {
   url: 'https://mikeroe.pl',
   sameAs: [
     'https://github.com/mikeroe',
-    'https://www.linkedin.com/in/mike-roe-8598313b7/'
+    'https://www.linkedin.com/in/mike-roe-8598313b7/',
+    'https://www.facebook.com/profile.php?id=61580788897042'
   ],
   areaServed: 'PL',
   priceRange: '$$',

@@ -38,7 +38,6 @@ interface Project {
   description_en: string;
   stack: string[];
   status: string;
-  github: string;
   live: string;
   image: string;
 }
