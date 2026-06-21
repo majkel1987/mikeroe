@@ -19,6 +19,12 @@ const config: Config = {
         accent2: 'var(--accent2)',
         accent3: 'var(--accent3)',
         text: 'var(--text-custom)',
+        ember: 'var(--ember)',
+        sunlit: 'var(--sunlit)',
+        dusk: 'var(--dusk)',
+        glacier: 'var(--glacier)',
+        summit: 'var(--summit)',
+        snowcap: 'var(--snowcap)',
         
         muted: {
           DEFAULT: "var(--muted-custom)",

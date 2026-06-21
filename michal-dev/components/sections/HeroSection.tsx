@@ -1,152 +1,125 @@
 'use client';
 
-import { useRef, useLayoutEffect } from 'react';
-import gsap from 'gsap';
-import TechOrbit from '../ui/TechOrbit';
-import { ArrowDown } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useLenis } from '@/components/SmoothScroll';
+import { useLanguage } from '@/lib/LanguageContext';
 import { FlipWords } from '../ui/flip-words';
 import { TypewriterEffectSmooth } from '../ui/typewriter-effect';
-import { TextGenerateEffect } from '../ui/text-generate-effect';
-import ColourfulText from '../ui/colourful-text';
-import { useLanguage } from '@/lib/LanguageContext';
-import { useLenis } from '@/components/SmoothScroll';
 
-const TRANSLATIONS = {
-  pl: {
-    badge: 'WEB DEVELOPER • SAAS BUILDER',
-    greetings: ['Cześć!', 'Hello!', 'Hola!', 'Bonjour!', 'Ciao!', 'Hallo!'],
-    headlineLine1: [{ text: 'Buduję' }, { text: 'aplikacje', isColourful: true }, { text: 'webowe,' }] as { text: string; isColourful?: boolean }[],
-    headlineLine2: [{ text: 'na' }, { text: 'których' }, { text: 'możesz' }, { text: 'polegać.' }] as { text: string; isColourful?: boolean }[],
-    headlineMobile: <>Buduję <ColourfulText text="aplikacje" /> webowe,{' '}<span className="block">na których możesz polegać.</span></>,
-    bio: 'Łączę analityczne myślenie z nowoczesnymi technologiami. Od stabilnej architektury w C# i .NET, po responsywny frontend w React. Zamieniam Twoje wizje w działające produkty cyfrowe.',
-    primaryCta: 'Zbudujmy coś świetnego',
-    secondaryCta: 'Zobacz moje realizacje ↓',
-  },
-  en: {
-    badge: 'WEB DEVELOPER • SAAS BUILDER',
-    greetings: ['Hello!', 'Hi there!', 'Hey!', 'Greetings!'],
-    headlineLine1: [{ text: 'I build' }, { text: 'web', isColourful: true }, { text: 'apps,' }] as { text: string; isColourful?: boolean }[],
-    headlineLine2: [{ text: 'you' }, { text: 'can' }, { text: 'rely' }, { text: 'on.' }] as { text: string; isColourful?: boolean }[],
-    headlineMobile: <>I build <ColourfulText text="web" /> apps,{' '}<span className="block">you can rely on.</span></>,
-    bio: 'I combine analytical thinking with modern technologies. From solid C# & .NET architecture to responsive React frontends. I turn your ideas into working digital products.',
-    primaryCta: "Let's build something great",
-    secondaryCta: 'See my work ↓',
-  },
+const HERO_CONTENT_PL = {
+  badge: "WEB DEVELOPER • SAAS BUILDER",
+  greetings: ["Bonjour!", "Cześć!", "Hello!", "Hola!", "Ciao!", "Hallo!"],
+  bio: "Łączę analityczne myślenie z nowoczesnymi technologiami. Od stabilnej architektury w C# i .NET, po responsywny frontend w React. Zamieniam Twoje wizje w działające produkty cyfrowe.",
+  primaryCta: "Zbudujmy coś świetnego",
+  secondaryCta: "Zobacz moje realizacje ↓"
 };
 
+const HERO_CONTENT_EN = {
+  badge: "WEB DEVELOPER • SAAS BUILDER",
+  greetings: ["Hello!", "Cześć!", "Hola!", "Bonjour!", "Ciao!", "Hallo!"],
+  bio: "I combine analytical thinking with modern technologies. From stable architecture in C# and .NET, to responsive frontend in React. I turn your visions into working digital products.",
+  primaryCta: "Let's build something great",
+  secondaryCta: "See my work ↓"
+};
+
+const headlineWordsLine1_PL = [
+  { text: "Buduję", className: "text-snowcap" },
+  { text: "aplikacje", isColourful: true },
+  { text: "webowe,", className: "text-snowcap" },
+];
+
+const headlineWordsLine2_PL = [
+  { text: "na", className: "text-snowcap" },
+  { text: "których", className: "text-snowcap" },
+  { text: "możesz", className: "text-snowcap" },
+  { text: "polegać.", className: "text-snowcap" },
+];
+
+const headlineWordsLine1_EN = [
+  { text: "I build", className: "text-snowcap" },
+  { text: "web apps", isColourful: true },
+  { text: "you can", className: "text-snowcap" },
+];
+
+const headlineWordsLine2_EN = [
+  { text: "rely", className: "text-snowcap" },
+  { text: "on.", className: "text-snowcap" },
+];
+
 export default function HeroSection() {
-  const { lang } = useLanguage();
-  const t = TRANSLATIONS[lang];
   const { lenis } = useLenis();
+  const { lang } = useLanguage();
 
-  const sectionRef = useRef<HTMLElement>(null);
-  const badgeRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const scrollArrowRef = useRef<HTMLDivElement>(null);
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-  const bioRef = useRef<HTMLParagraphElement>(null);
+  const isPl = lang === 'pl';
+  const content = isPl ? HERO_CONTENT_PL : HERO_CONTENT_EN;
+  const line1 = isPl ? headlineWordsLine1_PL : headlineWordsLine1_EN;
+  const line2 = isPl ? headlineWordsLine2_PL : headlineWordsLine2_EN;
+  const headlineWords = [...line1, ...line2];
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.set(badgeRef.current, { opacity: 0, y: 20 });
-      gsap.set(headlineRef.current, { opacity: 0, y: 30 });
-      gsap.set(bioRef.current, { opacity: 0, y: 20 });
-      gsap.set(ctaRef.current?.children || [], { opacity: 0, y: 20 });
-      gsap.set(scrollArrowRef.current, { opacity: 0, y: -20 });
-
-      const tl = gsap.timeline({ delay: 0.3 });
-
-      tl.to(badgeRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
-      tl.to(headlineRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.4);
-      tl.to(bioRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 1.0);
-      tl.to(ctaRef.current?.children || [], { opacity: 1, y: 0, duration: 0.5, stagger: 0.15, ease: 'power3.out' }, 1.6);
-      tl.to(scrollArrowRef.current, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 2.2);
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  const handleScrollTo = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (lenis) {
+      lenis.scrollTo(id);
+    } else {
+      document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <section ref={sectionRef} id="hero" className="relative w-full overflow-hidden">
-      <div className="w-full max-w-[1800px] mx-auto px-6 lg:px-12 py-0 h-dvh min-h-[580px] grid grid-cols-1 xl:grid-cols-2 items-center gap-10 xl:gap-20 pb-16">
-
-        {/* Left Column (TechOrbit Graphics) – hidden until xl */}
-        <div className="hidden xl:flex relative w-full max-w-[800px] 2xl:max-w-[950px] mx-auto aspect-square items-center justify-center order-2 xl:order-1">
-          <TechOrbit />
-        </div>
-
-        {/* Right Column (Text & CTAs) */}
-        <div className="w-full flex flex-col gap-5 lg:gap-7 items-start z-10 order-1 xl:order-2 justify-center h-full">
-
-          {/* Pre-title badge */}
-          <div ref={badgeRef} className="inline-flex items-center">
-            <span className="text-gray-400 font-mono text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase">
-              {t.badge}
-            </span>
-          </div>
-
-          {/* H1 Headline */}
-          <div ref={headlineRef} className="flex flex-col gap-2">
-            <div className="text-gray-50 font-jakarta font-bold text-3xl md:text-4xl lg:text-6xl xl:text-[64px] leading-[1.1] tracking-tight -ml-2">
-              <FlipWords words={[...t.greetings]} duration={3000} className="text-[#FF6B35]" />
-            </div>
-
-            {/* Mobile + Tablet: static headline */}
-            <h1 className="lg:hidden text-gray-50 font-jakarta font-bold text-3xl md:text-4xl leading-[1.2] tracking-tight">
-              {t.headlineMobile}
-            </h1>
-
-            {/* Desktop: animated TypewriterEffectSmooth */}
-            <h1 className="hidden lg:flex flex-col text-gray-50 font-jakarta font-bold lg:text-5xl xl:text-6xl 2xl:text-[64px] leading-[1.1] tracking-tight h-auto min-h-[1.5em] pb-3 lg:pb-0">
-              <TypewriterEffectSmooth
-                key={`line1-${lang}`}
-                words={t.headlineLine1}
-                className="m-0 space-x-2 lg:space-x-3 w-full max-w-full overflow-hidden !leading-[1.1]"
-                cursorClassName="hidden"
-              />
-              <TypewriterEffectSmooth
-                key={`line2-${lang}`}
-                words={t.headlineLine2}
-                className="m-0 space-x-2 lg:space-x-3 w-full max-w-full overflow-hidden !leading-[1.1]"
-                cursorClassName="bg-[#FF6B35] h-[1em] self-center ml-2"
-              />
-            </h1>
-          </div>
-
-          {/* Bio */}
-          <div ref={bioRef} className="text-gray-300 font-sans font-normal text-base sm:text-lg leading-relaxed max-w-xl">
-            <TextGenerateEffect key={`bio-${lang}`} words={t.bio} />
-          </div>
-
-          {/* CTAs */}
-          <div ref={ctaRef} className="flex flex-row flex-nowrap items-center gap-3 mt-1 w-full">
-            <a
-              href="#contact"
-              onClick={(e) => { e.preventDefault(); if (lenis) { lenis.scrollTo('#contact'); } else { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); } }}
-              className="cursor-pointer flex-1 min-h-[44px] px-5 py-3.5 bg-[#FF6B35] rounded-xl text-white font-sans font-semibold text-sm sm:text-base shadow-lg shadow-[#FF6B35]/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 text-center flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-            >
-              {t.primaryCta}
-            </a>
-            <a
-              href="#portfolio"
-              onClick={(e) => { e.preventDefault(); if (lenis) { lenis.scrollTo('#portfolio'); } else { document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' }); } }}
-              className="cursor-pointer flex-1 min-h-[44px] px-5 py-3.5 border border-gray-500 rounded-xl text-gray-200 bg-transparent font-sans font-medium text-sm sm:text-base hover:bg-white/10 hover:border-white/60 hover:-translate-y-0.5 transition-all duration-300 text-center flex items-center justify-center focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-            >
-              {t.secondaryCta}
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Scroll Down Arrow */}
-      <div ref={scrollArrowRef} className="absolute w-full bottom-8 left-0 flex justify-center z-20">
-        <button
-          onClick={(e) => { e.preventDefault(); if (lenis) { lenis.scrollTo('#services'); } else { document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }); } }}
-          className="group animate-bounce p-3 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-gray-400 hover:text-[#FF6B35] hover:border-[#FF6B35]/50 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg cursor-pointer"
-          aria-label="Scroll to services"
+    <section 
+      id="hero" 
+      className="relative w-full min-h-screen flex items-center justify-center overflow-x-hidden text-zinc-50 font-sans"
+    >
+      <div className="container relative z-10 mx-auto flex w-full max-w-full flex-col items-center justify-center px-4 py-16 text-center sm:px-6 sm:py-20 lg:py-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex w-full max-w-3xl flex-col items-center md:max-w-4xl lg:max-w-5xl xl:max-w-6xl"
         >
-          <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6" />
-        </button>
+          {/* Status Badge */}
+          <div className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-[9px] font-mono uppercase tracking-widest text-zinc-300 shadow-sm backdrop-blur-md sm:mb-8 sm:text-[10px]">
+            {content.badge}
+          </div>
+          
+          <div className="mb-4 flex w-full max-w-full flex-col items-center justify-center gap-1 sm:mb-6 sm:gap-2">
+            <div className="relative flex min-h-[2.25rem] w-full items-center justify-center overflow-hidden sm:min-h-[3rem]">
+              <div className="text-snowcap text-[1.65rem] font-extrabold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl lg:text-7xl">
+                <FlipWords words={content.greetings} duration={3000} className="text-snowcap" />
+              </div>
+            </div>
+            <h1 className="w-full max-w-full pb-1 text-center text-[1.65rem] font-extrabold leading-[1.15] tracking-tight text-snowcap sm:pb-3 sm:text-4xl md:text-[2.35rem] md:leading-[1.12] lg:text-6xl lg:leading-[1.08] xl:text-7xl">
+              <TypewriterEffectSmooth
+                words={headlineWords}
+                delay={0.45}
+                className="m-0 w-full max-w-full justify-center !leading-[inherit]"
+                cursorClassName="bg-ember ml-1 inline-block h-[0.9em] w-[3px] self-auto sm:ml-2 sm:w-[4px]"
+              />
+            </h1>
+          </div>
+          
+          <p className="mx-auto mb-8 max-w-2xl px-1 text-base leading-relaxed text-zinc-300 sm:mb-10 sm:px-0 sm:text-lg md:text-xl">
+            {content.bio}
+          </p>
+          
+          <div className="flex w-full max-w-md flex-col justify-center gap-3 sm:max-w-none sm:flex-row sm:gap-4">
+            <a 
+              href="#contact"
+              onClick={handleScrollTo('#contact')}
+              className="group relative inline-flex h-12 w-full items-center justify-center overflow-hidden rounded-lg bg-ember px-6 font-semibold text-bg shadow-lg shadow-ember/30 transition-all duration-300 hover:scale-[1.02] hover:bg-sunlit focus:outline-none focus:ring-2 focus:ring-ember focus:ring-offset-2 focus:ring-offset-zinc-950 sm:w-auto sm:px-8"
+            >
+              {content.primaryCta}
+            </a>
+            
+            <a 
+              href="#portfolio"
+              onClick={handleScrollTo('#portfolio')}
+              className="inline-flex h-12 w-full items-center justify-center rounded-lg border border-glacier bg-zinc-900/50 px-6 font-medium text-zinc-300 backdrop-blur-sm transition-all hover:bg-zinc-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 focus:ring-offset-zinc-950 sm:w-auto sm:px-8"
+            >
+              {content.secondaryCta}
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

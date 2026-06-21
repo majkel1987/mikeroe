@@ -1,14 +1,19 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { sendContactEmail } from '@/lib/email';
+import { checkContactRateLimit } from '@/lib/rate-limit';
 
 const contactSchema = z.object({
-  name: z.string().min(2, 'Imię musi mieć co najmniej 2 znaki'),
-  email: z.string().email('Niepoprawny adres email'),
+  name: z.string().min(2, 'Imię i nazwisko jest wymagane.'),
+  email: z.string().email('Podaj poprawny adres email.'),
   company: z.string().optional(),
-  subject: z.string().min(1, 'Wybierz temat wiadomości'),
-  message: z.string().min(10, 'Wiadomość musi mieć co najmniej 10 znaków').max(2000, 'Maksymalnie 2000 znaków'),
+  subject: z.string().min(1, 'Wybierz typ projektu.'),
+  message: z
+    .string()
+    .min(20, 'Opisz swój projekt (min. 20 znaków).')
+    .max(2000, 'Maksymalnie 2000 znaków.'),
   website: z.string().optional(), // honeypot
 });
 
@@ -39,6 +44,22 @@ export async function submitContact(
   // Honeypot check - if filled, it's a bot - silently return success
   if (rawData.website && rawData.website.length > 0) {
     return { success: true };
+  }
+
+  const headerList = headers();
+  const forwardedFor = headerList.get('x-forwarded-for');
+  const clientIp =
+    forwardedFor?.split(',')[0]?.trim() ||
+    headerList.get('x-real-ip') ||
+    'unknown';
+
+  if (!checkContactRateLimit(clientIp)) {
+    return {
+      success: false,
+      errors: {
+        form: 'Zbyt wiele wiadomości. Spróbuj ponownie za godzinę.',
+      },
+    };
   }
 
   // Validate with Zod

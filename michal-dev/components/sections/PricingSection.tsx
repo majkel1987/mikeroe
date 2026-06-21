@@ -25,7 +25,7 @@ const TRANSLATIONS = {
   en: {
     sectionLabel: 'PRICING',
     title: 'Clear terms, clean code, zero hidden costs',
-    subtitle: 'I value engineering precision and transparency. Pick the package that fits your business stage, or let\u2019s discuss a custom quote.',
+    subtitle: "I value engineering precision and transparency. Pick the package that fits your business stage, or let's discuss a custom quote.",
     toggleStandard: 'Standard',
     toggleUrgent: 'Rush Mode',
     mostPopular: 'Most popular',
@@ -41,6 +41,7 @@ type LocalisedArr = { pl: string[]; en: string[] };
 interface PricingTier {
   id: string;
   tier: Localised;
+  headline: Localised;
   description: Localised;
   price: string | Localised;
   currency: string;
@@ -79,21 +80,39 @@ export default function PricingSection() {
   // Apply pricing card tilt effect
   usePricingCardTilt(gridRef, pricingCardsRef);
 
-  const calculatePrice = (basePrice: string, urgent: boolean) => {
-    if (!urgent) return basePrice;
-    
-    // Handle ranges like "2000-2500"
+  const EXCHANGE_RATE = 4.0;
+
+  const roundNatural = (value: number) => {
+    if (value < 1000) {
+      return Math.round(value / 50) * 50;
+    }
+    return Math.round(value / 100) * 100;
+  };
+
+  const calculatePrice = (basePrice: string, urgent: boolean, currentLang: string) => {
+    const processPrice = (p: string) => {
+      const numPrice = parseInt(p.replace(/\D/g, ''), 10);
+      if (isNaN(numPrice)) return p;
+
+      let finalPrice = numPrice;
+      if (urgent) {
+        finalPrice = numPrice * 1.5;
+      }
+
+      if (currentLang === 'en') {
+        finalPrice = finalPrice / EXCHANGE_RATE;
+        finalPrice = roundNatural(finalPrice);
+      } else {
+        finalPrice = Math.round(finalPrice);
+      }
+      return finalPrice.toString();
+    };
+
     if (basePrice.includes('-')) {
-      return basePrice.split('-').map(p => {
-        const numPrice = parseInt(p.replace(/\D/g, ''), 10);
-        if (isNaN(numPrice)) return p;
-        return Math.round(numPrice * 1.5).toString();
-      }).join('-');
+      return basePrice.split('-').map(processPrice).join('-');
     }
 
-    const numPrice = parseInt(basePrice.replace(/\D/g, ''), 10);
-    if (isNaN(numPrice)) return basePrice;
-    return Math.round(numPrice * 1.5).toString();
+    return processPrice(basePrice);
   };
 
   const calculateTimeframe = (baseTimeframe: string, urgent: boolean) => {
@@ -113,7 +132,7 @@ export default function PricingSection() {
   const handleOpenModal = (plan: PricingTier) => {
     setSelectedPlan({
       id: plan.id,
-      tier: plan.tier[lang],
+      tier: plan.headline[lang],
       specsIncluded: plan.specsIncluded[lang],
       specsExcluded: plan.specsExcluded[lang],
     });
@@ -170,7 +189,7 @@ export default function PricingSection() {
       <section ref={sectionRef} id="pricing" className="w-full py-8 md:py-28 flex justify-center relative overflow-hidden px-4 sm:px-8 xl:px-16 2xl:px-24">
 
         {/* Background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] bg-[#FF6B35]/8 blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] bg-ember/8 blur-[130px] rounded-full pointer-events-none" />
 
         <div className="w-full max-w-[1800px] mx-auto flex flex-col gap-10 md:gap-14 relative z-10 items-center">
 
@@ -179,10 +198,10 @@ export default function PricingSection() {
 
             {/* Label + divider row */}
             <div className="flex flex-row items-center gap-4 w-full">
-              <span className="text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase">
+              <span className="text-ember font-mono text-xs font-semibold tracking-widest uppercase">
                 {t.sectionLabel}
               </span>
-              <div className="h-px bg-[#FF6B35]/30 flex-1" />
+              <div className="h-px bg-ember/30 flex-1" />
             </div>
 
             {/* H2 */}
@@ -199,7 +218,7 @@ export default function PricingSection() {
             <div className="flex justify-center w-full">
               <button
                 onClick={() => setIsUrgent(!isUrgent)}
-                className="inline-flex items-center justify-center gap-4 bg-zinc-900 hover:bg-zinc-800 border border-white/8 px-6 py-3 rounded-full backdrop-blur-sm transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B35] max-w-fit"
+                className="inline-flex items-center justify-center gap-4 bg-zinc-900 hover:bg-zinc-800 border border-white/8 px-6 py-3 rounded-full backdrop-blur-sm transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember max-w-fit"
                 aria-pressed={isUrgent}
               >
               <span className={`text-[15px] font-medium transition-colors ${!isUrgent ? 'text-white' : 'text-gray-500'}`}>
@@ -207,8 +226,8 @@ export default function PricingSection() {
               </span>
 
               {/* Switch track */}
-              <div className={`w-12 h-6 rounded-full flex items-center px-1 border transition-colors ${isUrgent ? 'bg-[#FF6B35]/20 border-[#FF6B35]/30' : 'bg-white/10 border-white/5'}`}>
-                <div className={`w-4 h-4 rounded-full transition-transform duration-300 ${isUrgent ? 'translate-x-6 bg-[#FF6B35]' : 'translate-x-0 bg-white'}`} />
+              <div className={`w-12 h-6 rounded-full flex items-center px-1 border transition-colors ${isUrgent ? 'bg-ember/20 border-ember/30' : 'bg-white/10 border-white/5'}`}>
+                <div className={`w-4 h-4 rounded-full transition-transform duration-300 ${isUrgent ? 'translate-x-6 bg-ember' : 'translate-x-0 bg-white'}`} />
               </div>
 
               {/* Urgent label + badge */}
@@ -216,7 +235,7 @@ export default function PricingSection() {
                 <span className={`text-[15px] font-medium transition-colors ${isUrgent ? 'text-white' : 'text-gray-500'}`}>
                   {t.toggleUrgent}
                 </span>
-                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full transition-colors ${isUrgent ? 'bg-[#FF6B35] text-white' : 'text-[#FF6B35] bg-[#FF6B35]/10 border border-[#FF6B35]/20'}`}>
+                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full transition-colors ${isUrgent ? 'bg-ember text-white' : 'text-ember bg-ember/10 border border-ember/20'}`}>
                   +50%
                 </span>
               </div>
@@ -233,44 +252,44 @@ export default function PricingSection() {
               return (
                 <div
                   key={p.id}
-                  className={`pricing-card flex flex-col relative group transition-transform duration-300 ${
+                  className={`pricing-card flex flex-col relative group transition-transform duration-300 hover:-translate-y-1 ${
                     isHighlighted
-                      ? 'lg:scale-105 z-10'
+                      ? 'highlighted lg:scale-105 z-10'
                       : ''
                   }`}
                 >
                   {/* Orange glow behind highlighted card */}
                   {isHighlighted && (
-                    <div className="absolute -inset-[1px] rounded-2xl blur-[10px] bg-[#FF6B35]/20 pointer-events-none" />
-                  )}
-
-                  {/* "Najpopularniejszy" badge (outside overflow-hidden to avoid clipping) */}
-                  {isHighlighted && (
-                    <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-                      <div className="bg-[#FF6B35] text-white text-[11px] font-semibold px-4 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(255,107,53,0.4)]">
-                        {t.mostPopular}
-                      </div>
-                    </div>
+                    <div className="absolute -inset-[1px] rounded-2xl blur-[10px] bg-ember/20 pointer-events-none" />
                   )}
 
                   <div
-                    className={`relative w-full flex flex-col h-full p-6 sm:p-8 rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    className={`relative w-full flex flex-col h-full p-6 sm:p-8 rounded-2xl border transition-colors duration-300 overflow-visible ${
                       isHighlighted
-                        ? 'bg-[#1A1A24] border-[#FF6B35] shadow-[0_0_30px_rgba(255,107,53,0.18)] hover:-translate-y-1'
-                        : 'bg-[#1A1A24] border-white/5 hover:border-white/15 hover:-translate-y-1'
+                        ? 'bg-[#1A1A24] border-ember shadow-[0_0_30px_rgba(226,149,75,0.18)]'
+                        : 'bg-[#1A1A24] border-white/5 hover:border-white/15'
                     }`}
                   >
-                    {/* "Najpopularniejszy" badge moved outside overflow-hidden */}
+                    {isHighlighted && (
+                      <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+                        <div className="bg-ember text-bg text-[11px] font-semibold px-4 py-1 rounded-full whitespace-nowrap shadow-[0_0_12px_rgba(226,149,75,0.4)]">
+                          {t.mostPopular}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="overflow-hidden">
 
                     {/* ── Card Header ── */}
                     <div className="flex flex-col gap-3">
-                      {/* Title */}
-                      <div className="font-display text-white text-2xl font-bold tracking-tight">
+                      <span className="text-ember font-mono text-[11px] font-semibold tracking-widest uppercase">
                         {p.tier[lang]}
+                      </span>
+                      <div className="font-display text-white text-2xl font-bold tracking-tight leading-tight">
+                        {p.headline[lang]}
                       </div>
 
-                      {/* Short description */}
-                      <div className="font-sans text-gray-300 text-sm leading-relaxed min-h-[3rem]">
+                      <div className="font-sans text-gray-300 text-sm leading-relaxed">
                         {p.description[lang]}
                       </div>
 
@@ -285,11 +304,11 @@ export default function PricingSection() {
                         )}
                         <div className="flex items-baseline gap-2 flex-wrap">
                           <span className="font-display text-white text-3xl sm:text-4xl font-bold tracking-tight leading-none transition-all duration-300">
-                            {calculatePrice(typeof p.price === 'object' ? p.price[lang] : p.price, isUrgent)}
+                            {calculatePrice(typeof p.price === 'object' ? p.price[lang] : p.price, isUrgent, lang)}
                           </span>
                           {p.currency && (
                             <span className="text-gray-300 text-sm font-medium tracking-wide">
-                              {p.currency}
+                              {lang === 'en' && p.currency.includes('PLN') ? 'USD net' : p.currency}
                             </span>
                           )}
                         </div>
@@ -344,7 +363,7 @@ export default function PricingSection() {
                           onClick={handleScrollToContact}
                           className={`w-full h-12 flex items-center justify-center rounded-lg font-sans text-[15px] font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A24] relative overflow-hidden group ${
                             isHighlighted
-                              ? 'bg-[#FF6B35] text-white hover:brightness-110 focus-visible:ring-[#FF6B35]'
+                              ? 'bg-ember text-bg hover:brightness-110 focus-visible:ring-ember'
                               : 'bg-transparent border border-white/20 text-white hover:bg-white/5 focus-visible:ring-white/20'
                           }`}
                         >
@@ -354,6 +373,7 @@ export default function PricingSection() {
                           <span className="relative z-10">{p.ctaText[lang]}</span>
                         </a>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>

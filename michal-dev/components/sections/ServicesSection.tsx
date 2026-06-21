@@ -45,14 +45,17 @@ const iconsMap: Record<string, React.ElementType> = {
   Rocket,
 };
 
-// Per-phase accent colours: orange → red gradient across the 5 phases
+// Per-phase accent colours for timeline dots and connectors
 const phaseAccents = [
-  { dot: '#FF6B35', glowColor: 'rgba(255,107,53,0.5)', badge: 'bg-[#FF6B35]/10 text-[#FF6B35]', line: 'from-[#FF6B35] to-[#f0842a]' },
-  { dot: '#f0842a', glowColor: 'rgba(240,132,42,0.5)', badge: 'bg-[#f0842a]/10 text-[#f0842a]', line: 'from-[#f0842a] to-[#e55c22]' },
-  { dot: '#e55c22', glowColor: 'rgba(229,92,34,0.5)',  badge: 'bg-[#e55c22]/10 text-[#e55c22]', line: 'from-[#e55c22] to-[#df4a35]' },
-  { dot: '#df4a35', glowColor: 'rgba(223,74,53,0.5)',  badge: 'bg-[#df4a35]/10 text-[#df4a35]', line: 'from-[#df4a35] to-[#E63946]' },
-  { dot: '#E63946', glowColor: 'rgba(230,57,70,0.5)',  badge: 'bg-[#E63946]/10 text-[#E63946]', line: 'from-[#E63946] to-[#E63946]' },
+  { dot: '#E2954B', glowColor: 'rgba(226,149,75,0.5)', line: 'from-ember to-[#f0842a]' },
+  { dot: '#f0842a', glowColor: 'rgba(240,132,42,0.5)', line: 'from-[#f0842a] to-[#e55c22]' },
+  { dot: '#e55c22', glowColor: 'rgba(229,92,34,0.5)', line: 'from-[#e55c22] to-[#df4a35]' },
+  { dot: '#df4a35', glowColor: 'rgba(223,74,53,0.5)', line: 'from-[#df4a35] to-[#E63946]' },
+  { dot: '#E63946', glowColor: 'rgba(230,57,70,0.5)', line: 'from-[#E63946] to-[#E63946]' },
 ];
+
+const PHASE_BADGE_CLASS =
+  'bg-[rgba(201,123,62,0.12)] text-[#E2954B] border border-[rgba(201,123,62,0.35)]';
 
 export default function ServicesSection() {
   const services: ServicePhase[] = servicesData;
@@ -137,10 +140,10 @@ export default function ServicesSection() {
         <div ref={headerRef} className="flex flex-col gap-5 w-full">
           {/* Pre-title */}
           <div className="flex flex-row items-center gap-4">
-            <span className="services-label text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase">
+            <span className="services-label text-ember font-mono text-xs font-semibold tracking-widest uppercase">
               {t.sectionLabel}
             </span>
-            <div className="services-divider h-px bg-[#FF6B35]/30 flex-1" />
+            <div className="services-divider h-px bg-ember/30 flex-1" />
           </div>
 
           <h2
@@ -192,7 +195,7 @@ export default function ServicesSection() {
 
                   {/* ── Right: card ── */}
                   <div className={`phase-card w-full ${isLast ? 'mb-0' : 'mb-5'}`}>
-                    <div className="group bg-[#1A1A24] border border-white/5 rounded-xl px-5 py-4 sm:px-6 sm:py-5 flex flex-row items-start justify-between gap-4 hover:-translate-y-0.5 transition-transform duration-200">
+                    <div className="group bg-[rgba(14,18,28,0.82)] border border-[rgba(226,149,75,0.18)] rounded-xl px-5 py-4 sm:px-6 sm:py-5 flex flex-row items-start justify-between gap-4 hover:-translate-y-0.5 transition-transform duration-200">
                       {/* Left: title + description */}
                       <div className="flex flex-col gap-1.5">
                         <h3 className="text-white font-display text-lg sm:text-xl font-bold leading-snug">
@@ -204,7 +207,7 @@ export default function ServicesSection() {
                       </div>
                       {/* Right: phase badge */}
                       <span
-                        className={`shrink-0 font-mono text-[10px] sm:text-xs font-semibold tracking-widest uppercase px-2.5 py-1 rounded ${accent.badge} mt-0.5`}
+                        className={`shrink-0 font-mono text-[10px] sm:text-xs font-semibold tracking-widest uppercase px-2.5 py-1 rounded ${PHASE_BADGE_CLASS} mt-0.5`}
                       >
                         Phase {service.phase}
                       </span>
@@ -235,7 +238,7 @@ export default function ServicesSection() {
                 e.preventDefault();
                 if (lenis) { lenis.scrollTo('#contact'); } else { document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }
               }}
-              className="shrink-0 cursor-pointer bg-[#FF6B35] hover:bg-[#E63946] transition-colors duration-250 text-white font-sans text-sm sm:text-base font-medium px-7 py-3 rounded-xl whitespace-nowrap text-center focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="shrink-0 cursor-pointer bg-[#E2954B] hover:bg-sunlit transition-colors duration-250 text-bg font-sans text-sm sm:text-base font-medium px-7 py-3 rounded-xl whitespace-nowrap text-center focus-visible:ring-2 focus-visible:ring-[#E2954B] focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               {t.ctaButton}
             </a>

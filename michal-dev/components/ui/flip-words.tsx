@@ -51,14 +51,12 @@ export const FlipWords = ({
         }}
         exit={{
           opacity: 0,
-          y: -40,
-          x: 40,
+          y: -16,
           filter: "blur(8px)",
-          scale: 2,
           position: "absolute",
         }}
         className={cn(
-          "z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-2",
+          "relative z-10 inline-block px-1 text-center text-neutral-900 dark:text-neutral-100 sm:px-2",
           className
         )}
         key={currentWord}

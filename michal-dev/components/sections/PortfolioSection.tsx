@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useRef, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import projectsData from '@/content/projects.json';
 import gsap from 'gsap';
 import { ExternalLink } from 'lucide-react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/lib/LanguageContext';
-import { usePortfolioCardSkew } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,19 +53,6 @@ export default function PortfolioSection() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const projectCardsRef = useRef<HTMLElement[]>([]);
-
-  // Collect project card refs
-  useEffect(() => {
-    if (gridRef.current) {
-      projectCardsRef.current = Array.from(
-        gridRef.current.querySelectorAll('.project-card')
-      ) as HTMLElement[];
-    }
-  }, []);
-
-  // Apply portfolio card skew effect
-  usePortfolioCardSkew(projectCardsRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -129,26 +115,6 @@ export default function PortfolioSection() {
           stagger: 0.2,
           ease: 'power3.out',
         }, '-=0.3');
-
-        // Portfolio parallax enhancement: separate ScrollTrigger per card
-        projectCards.forEach((card) => {
-          const mockup = card.querySelector('.laptop-mockup');
-          if (mockup) {
-            gsap.fromTo(mockup,
-              { y: -20 },
-              {
-                y: 20,
-                ease: 'none',
-                scrollTrigger: {
-                  trigger: card,
-                  start: 'top bottom',
-                  end: 'bottom top',
-                  scrub: true,
-                },
-              }
-            );
-          }
-        });
       }
 
     }, sectionRef);
@@ -165,10 +131,10 @@ export default function PortfolioSection() {
         {/* Header - Top Section */}
         <div ref={headerRef} className="flex flex-col gap-5 w-full">
           <div className="flex flex-row items-center gap-4">
-            <span ref={labelRef} className="text-[#FF6B35] font-mono text-xs font-semibold tracking-widest uppercase">
+            <span ref={labelRef} className="text-ember font-mono text-xs font-semibold tracking-widest uppercase">
               {t.sectionLabel}
             </span>
-            <div ref={dividerRef} className="h-px bg-[#FF6B35]/30 flex-1"></div>
+            <div ref={dividerRef} className="h-px bg-ember/30 flex-1"></div>
           </div>
           <h2 ref={titleRef} className="text-white font-display text-3xl md:text-[42px] lg:text-5xl font-bold leading-[1.15] max-w-[820px]">
             {t.title}
@@ -291,7 +257,7 @@ export default function PortfolioSection() {
                              href={project.live}
                              target="_blank"
                              rel="noopener noreferrer"
-                             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#FF6B35] text-white font-sans font-semibold text-[15px] shadow-lg shadow-[#FF6B35]/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 w-fit group/btn focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1c23]"
+                             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-ember text-bg font-sans font-semibold text-[15px] shadow-lg shadow-ember/20 hover:brightness-110 hover:-translate-y-0.5 transition-all duration-300 w-fit group/btn focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1c23]"
                           >
                              {t.visitSite}
                              <ExternalLink className="w-4 h-4 transition-transform group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" />

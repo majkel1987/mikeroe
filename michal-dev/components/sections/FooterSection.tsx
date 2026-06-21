@@ -4,7 +4,7 @@ import { useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLanguage } from '@/lib/LanguageContext';
-import { useLenis, useFooterSocialIconsSpread } from '@/components/SmoothScroll';
+import { useLenis } from '@/components/SmoothScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -158,14 +158,10 @@ export default function FooterSection() {
   const currentYear = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const socialIconsRef = useRef<HTMLDivElement>(null);
   const { lang } = useLanguage();
   const t = TRANSLATIONS[lang];
   const navLinks = lang === 'en' ? navLinksEN : navLinksPL;
   const { lenis } = useLenis();
-
-  // Apply footer social icons spread effect
-  useFooterSocialIconsSpread(footerRef, socialIconsRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -217,7 +213,7 @@ export default function FooterSection() {
             </div>
 
             {/* Social icons */}
-            <div ref={socialIconsRef} className="flex items-center gap-2 mt-1">
+            <div className="mt-1 flex items-center gap-2">
               {socialLinks.map(({ labelPL, labelEN, href, Icon }) => (
                 <a
                   key={labelPL}
@@ -225,7 +221,7 @@ export default function FooterSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={lang === 'en' ? labelEN : labelPL}
-                  className="flex w-10 h-10 items-center justify-center rounded-xl bg-surface border border-border text-muted hover:text-text hover:border-text/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2"
+                  className="flex w-10 h-10 items-center justify-center rounded-xl bg-surface border border-border text-muted hover:text-text hover:border-text/30 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2"
                 >
                   <Icon />
                 </a>
@@ -267,7 +263,7 @@ export default function FooterSection() {
                 {t.statusText}{' '}
                 <a
                   href="#contact"
-                  className="text-[#FF6B35] hover:underline transition-colors duration-200 cursor-pointer"
+                  className="text-ember hover:underline transition-colors duration-200 cursor-pointer"
                 >
                   {t.statusLink}
                 </a>
@@ -317,7 +313,7 @@ export default function FooterSection() {
           <a
             href="#main"
             onClick={(e) => { e.preventDefault(); if (lenis) { lenis.scrollTo(0); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); } }}
-            className="font-mono text-[11px] text-muted hover:text-text transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[#FF6B35] focus-visible:ring-offset-2 rounded px-2 py-1 cursor-pointer"
+            className="font-mono text-[11px] text-muted hover:text-text transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 rounded px-2 py-1 cursor-pointer"
           >
             {t.backToTop}
           </a>

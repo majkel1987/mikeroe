@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/sections/HeroSection';
+import SectionEntrance from '@/components/SectionEntrance';
 
 // Lazy load below-fold sections for better initial load performance
 const ServicesSection = dynamic(() => import('@/components/sections/ServicesSection'), {
@@ -20,13 +21,23 @@ const ContactSection = dynamic(() => import('@/components/sections/ContactSectio
 
 export default function Home() {
   return (
-    <main id="main" className="flex min-h-screen flex-col items-center justify-between">
+    <main id="main" className="flex min-h-screen w-full max-w-full flex-col items-center justify-between overflow-x-hidden">
       <HeroSection />
-      <ServicesSection />
-      <PortfolioSection />
-      <TechStackSection />
-      <PricingSection />
-      <ContactSection />
+      <SectionEntrance>
+        <ServicesSection />
+      </SectionEntrance>
+      <SectionEntrance>
+        <PortfolioSection />
+      </SectionEntrance>
+      <SectionEntrance>
+        <TechStackSection />
+      </SectionEntrance>
+      <SectionEntrance>
+        <PricingSection />
+      </SectionEntrance>
+      <SectionEntrance>
+        <ContactSection />
+      </SectionEntrance>
     </main>
   );
 }
