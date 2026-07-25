@@ -1,45 +1,36 @@
+import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
-import { fontSyne, fontDMSans } from '@/lib/fonts';
-import { siteMetadata } from '@/lib/metadata';
-import { jsonLdSchema } from '@/lib/schema';
-import { ThemeProvider } from '@/components/ThemeProvider';
-import Navbar from '@/components/Navbar';
-import FooterSection from '@/components/sections/FooterSection';
-import HeroBackground from '@/components/HeroBackground';
-import SectionEntrance from '@/components/SectionEntrance';
-import { LanguageProvider } from '@/lib/LanguageContext';
-import SmoothScroll from '@/components/SmoothScroll';
 import SkipLink from '@/components/SkipLink';
+import { fontDMSans, fontSyne } from '@/lib/fonts';
 
-export const metadata = siteMetadata;
+export const metadata: Metadata = {
+  metadataBase: new URL('https://mikeroe.pl'),
+  title: {
+    default: 'Strony internetowe dla firm usługowych | MikeRoe',
+    template: '%s | MikeRoe',
+  },
+  description:
+    'Projektowanie i wdrażanie stron internetowych dla firm usługowych i specjalistów. Jasna oferta, indywidualny UX/UI, SEO, analityka i publikacja.',
+  applicationName: 'MikeRoe',
+  category: 'business',
+};
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
+  const plausibleSource = process.env.NEXT_PUBLIC_PLAUSIBLE_SRC;
+
   return (
-    <html lang="pl" suppressHydrationWarning className={`${fontSyne.variable} ${fontDMSans.variable}`}>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
-        />
-      </head>
-      <body className="antialiased font-sans min-h-screen bg-transparent text-text selection:bg-accent1 selection:text-white">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <LanguageProvider>
-            <SmoothScroll>
-              <SkipLink />
-              <Navbar />
-              <HeroBackground />
-              {children}
-              <SectionEntrance>
-                <FooterSection />
-              </SectionEntrance>
-            </SmoothScroll>
-          </LanguageProvider>
-        </ThemeProvider>
+    <html lang="pl" className={`${fontSyne.variable} ${fontDMSans.variable}`}>
+      <body>
+        <SkipLink />
+        {children}
+        <Script id="plausible-init" strategy="beforeInteractive">
+          {`window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}`}
+        </Script>
+        {plausibleDomain && plausibleSource ? (
+          <Script defer data-domain={plausibleDomain} src={plausibleSource} strategy="afterInteractive" />
+        ) : null}
       </body>
     </html>
   );

@@ -1,15 +1,36 @@
-import { Syne, DM_Sans } from 'next/font/google';
+import localFont from 'next/font/local';
 
-// Only load 2 fonts for better performance (saves ~150-200KB)
-export const fontSyne = Syne({
-  subsets: ['latin', 'latin-ext'],
+export const fontSyne = localFont({
+  src: [
+    {
+      path: '../node_modules/@fontsource-variable/syne/files/syne-latin-wght-normal.woff2',
+      weight: '400 800',
+      style: 'normal',
+    },
+    {
+      path: '../node_modules/@fontsource-variable/syne/files/syne-latin-ext-wght-normal.woff2',
+      weight: '400 800',
+      style: 'normal',
+    },
+  ],
   variable: '--font-syne',
-  display: 'swap',
-  preload: true,
+  display: 'optional',
+  preload: false,
 });
 
-export const fontDMSans = DM_Sans({
-  subsets: ['latin', 'latin-ext'],
+export const fontDMSans = localFont({
+  src: [
+    {
+      path: '../node_modules/@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2',
+      weight: '100 1000',
+      style: 'normal',
+    },
+    {
+      path: '../node_modules/@fontsource-variable/dm-sans/files/dm-sans-latin-ext-wght-normal.woff2',
+      weight: '100 1000',
+      style: 'normal',
+    },
+  ],
   variable: '--font-dm-sans',
   display: 'swap',
   preload: true,
