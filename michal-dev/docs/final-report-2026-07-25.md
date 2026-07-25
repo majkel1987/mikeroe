@@ -6,7 +6,7 @@ Strona została przebudowana z portfolio „Fullstack Developer / SaaS Builder�
 
 Produkcja pozostaje zablokowana. Polityka prywatności zawiera jawny placeholder danych administratora i wymaga uzupełnienia oraz przeglądu prawnego. Plausible ładuje się dopiero po podaniu zmiennych środowiskowych.
 
-Vercel Preview: `https://mikeroe-p52x1jlym-majkel1987s-projects.vercel.app`. Deployment dla commita `e1a225b` zakończył się sukcesem i ma środowisko `Preview`, nie produkcyjne. Dostęp jest chroniony przez Vercel Authentication, dlatego automatyczna kontrola treści oraz rzeczywista wiadomość testowa z formularza wymagają zalogowanej sesji właściciela. Wiadomości nie wysłano, aby nie obchodzić ochrony preview ani nie użyć produkcji.
+Vercel Preview (stały alias gałęzi): `https://mikeroe-git-codex-cro-redesign-mikeroe-majkel1987s-projects.vercel.app`. Deployment ma środowisko `Preview`, nie produkcyjne. Dostęp jest chroniony przez Vercel Authentication, dlatego automatyczna kontrola treści oraz rzeczywista wiadomość testowa z formularza wymagają zalogowanej sesji właściciela. Wiadomości nie wysłano, aby nie obchodzić ochrony preview ani nie użyć produkcji.
 
 ## Wybrany komunikat i warianty hero
 
