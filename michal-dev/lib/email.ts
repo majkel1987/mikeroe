@@ -259,11 +259,6 @@ export async function sendContactEmail(data: ContactEmailData): Promise<{ succes
   const html = buildHtmlTemplate(data);
   const text = buildPlainTextTemplate(data);
 
-  // Debug: sprawdź czy zmienne są załadowane
-  console.log('[Email] GMAIL_USER defined:', !!process.env.GMAIL_USER);
-  console.log('[Email] GMAIL_APP_PASSWORD defined:', !!process.env.GMAIL_APP_PASSWORD);
-  console.log('[Email] CONTACT_EMAIL_TO:', process.env.CONTACT_EMAIL_TO);
-
   try {
     const result = await transporter.sendMail({
       from: `"Mikeroe.pl Contact" <${process.env.GMAIL_USER}>`,
@@ -273,7 +268,7 @@ export async function sendContactEmail(data: ContactEmailData): Promise<{ succes
       html,
       text,
     });
-    console.log('[Email] Sent successfully, messageId:', result.messageId);
+    console.log('[Email] Contact message sent:', result.messageId);
     return { success: true };
   } catch (error) {
     console.error('[Email] Failed to send:', error);

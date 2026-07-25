@@ -1,6 +1,6 @@
-# robots.txt for mikeroe.pl
 User-agent: *
 Allow: /
+Disallow: /demo/
+Disallow: /en/demo/
 
-# Sitemap
 Sitemap: https://mikeroe.pl/sitemap.xml
