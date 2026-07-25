@@ -1,10 +1,10 @@
 'use client';
 
-import { useLanguage } from '@/lib/LanguageContext';
+import { usePathname } from 'next/navigation';
 
 export default function SkipLink() {
-  const { lang } = useLanguage();
-  const text = lang === 'en' ? 'Skip to content' : 'Przejdź do treści';
+  const pathname = usePathname();
+  const text = pathname.startsWith('/en') ? 'Skip to content' : 'Przejdź do treści';
 
   return (
     <a
